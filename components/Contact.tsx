@@ -18,16 +18,16 @@ const Contact: React.FC = () => {
         Say Hello
       </a>
       <div className="flex justify-center space-x-6 mt-16 md:hidden">
-        <a href="https://github.com/akshaymondal" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
+        <a href="https://github.com/h3x-levi" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
           <Icons.GitHub size={24} />
         </a>
         <a href="https://www.linkedin.com/in/iakm/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
           <Icons.LinkedIn size={24} />
         </a>
-        <a href="https://twitter.com/am_leviathan?s=21" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
+        <a href="https://x.com/_zenith_am" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
           <Icons.Twitter size={24} />
         </a>
-        <a href="https://instagram.com/heythereperv" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
+        <a href="https://www.instagram.com/_zenith_am/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
           <Icons.Instagram size={24} />
         </a>
         <a href="mailto:luckymondal70@gmail.com" className="text-slate-400 hover:text-teal-300 transition-colors">

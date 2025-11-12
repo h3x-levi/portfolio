@@ -120,10 +120,10 @@ This generates an optimized production build in the `dist/` directory.
 - Based in Bengaluru, Karnataka, India
 
 ### Connect
-- **GitHub**: [@akshaymondal](https://github.com/akshaymondal)
+- **GitHub**: [@h3x-levi](https://github.com/h3x-levi)
 - **LinkedIn**: [Akshay Mondal](https://www.linkedin.com/in/iakm/)
-- **Twitter**: [@am_leviathan](https://twitter.com/am_leviathan)
-- **Instagram**: [@heythereperv](https://instagram.com/heythereperv)
+- **Twitter**: [@_zenith_am](https://x.com/_zenith_am)
+- **Instagram**: [@_zenith_am](https://www.instagram.com/_zenith_am/)
 - **Email**: [luckymondal70@gmail.com](mailto:luckymondal70@gmail.com)
 
 ## 📄 License

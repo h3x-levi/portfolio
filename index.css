@@ -1,0 +1,15 @@
+/* Global styles for the app */
+/* Use IBM Plex Mono as the project font */
+html, body, #root {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+code, kbd, pre, samp {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+/* keep the default text color and smoothing from tailwind utilities */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

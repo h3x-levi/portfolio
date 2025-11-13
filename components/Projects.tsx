@@ -9,7 +9,7 @@ const companyProjects: ProjectType[] = [
     title: 'Amazon Luna',
     company: 'Amazon',
     period: 'Feb 2022 - Present',
-    logo: '/images/amazon.svg',
+    logo: '/public/amazon.svg',
     description:
       'Amazon Luna is a cloud gaming platform available on Windows, Mac, Amazon Fire TV, iOS and Android. The platform is powered by AWS and integrates with Twitch. Responsibilities include automation and QA testing across devices and ensuring platform compatibility.',
     tech: ['Selenium Testing', 'Automation', 'Regression Testing', 'Cypress', 'Python', 'QA Automation'],
@@ -18,7 +18,7 @@ const companyProjects: ProjectType[] = [
     title: 'Parity (Fire Tablet Parity Program)',
     company: 'Amazon',
     period: 'Dec 2022 - Dec 2023',
-    logo: '/images/amazon.svg',
+    logo: '/public/amazon.svg',
     description:
       'Verified feature parity between Amazon Appstore apps and their counterparts on Google Play / Apple App Store. Used Agile methodology and Jira to manage test assignments and report discrepancies.',
     tech: ['Agile Methodologies', 'Agile Testing', 'Jira', 'Performance Testing'],

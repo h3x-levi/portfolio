@@ -79,15 +79,15 @@ const Header: React.FC<HeaderProps> = ({ activePage, setActivePage }) => {
       </nav>
       {/* Mobile Menu */}
       <div
-        className={`md:hidden fixed top-16 right-0 h-screen w-full bg-slate-900/98 backdrop-blur-sm transition-transform duration-300 ease-in-out transform ${
+        className={`md:hidden fixed top-0 right-0 h-full w-3/4 bg-slate-900/95 backdrop-blur-sm transition-transform duration-300 ease-in-out transform ${
           isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        } flex flex-col items-center justify-start space-y-6 pt-20 px-6`}
+        } flex flex-col items-center justify-center space-y-8`}
       >
         {navLinks.map((link) => (
           <a
             key={link.name}
             href={`#${link.id}`}
-            className="text-lg text-slate-300 hover:text-teal-300 transition-colors font-mono"
+            className="text-xl text-slate-300 hover:text-teal-300 transition-colors"
             onClick={(e) => { e.preventDefault(); handleNavClick(link.id as any); }}
           >
             {link.name}

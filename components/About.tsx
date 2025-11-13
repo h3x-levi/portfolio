@@ -17,7 +17,7 @@ const About: React.FC = () => {
       </h2>
 
       <div className="grid md:grid-cols-5 gap-10 items-center">
-        <div className="md:col-span-3 text-slate-400 space-y-6 text-lg">
+        <div className="md:col-span-3 text-slate-100 space-y-6 text-lg">
           <p>
             I am a DevOps engineer and developer with over 5 years of experience in Python, Selenium, and Cypress. Technical precision combined with a drive for creating meaningful, high-quality systems.
           </p>
@@ -38,7 +38,7 @@ const About: React.FC = () => {
 
           <div>
             <h3 className="text-slate-100 font-semibold mb-2">Recent Focus</h3>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-sm text-slate-300">
+            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono text-sm text-slate-200">
               <li className="flex items-start"><span className="text-teal-300 mr-2">▹</span> Nova AI — local-first assistant (offline contextual learning)</li>
               <li className="flex items-start"><span className="text-teal-300 mr-2">▹</span> Bharat Wallet — experimental UPI + identity wallet</li>
             </ul>
@@ -48,7 +48,7 @@ const About: React.FC = () => {
             <h3 className="text-slate-100 font-semibold mb-2">Technologies</h3>
             <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono text-sm">
               {skills.map(skill => (
-                <li key={skill} className="flex items-center">
+                <li key={skill} className="flex items-center text-slate-200">
                   <span className="text-teal-300 mr-2">▹</span>{skill}
                 </li>
               ))}
@@ -57,17 +57,17 @@ const About: React.FC = () => {
           
           <div className="mt-8">
             <h3 className="text-slate-100 font-semibold mb-4">Education</h3>
-            <div className="grid sm:grid-cols-2 gap-4 text-slate-300">
+            <div className="grid sm:grid-cols-2 gap-4 text-slate-200">
               <div className="bg-[#0b1220] p-4 rounded-lg">
                 <h4 className="text-teal-300 font-bold">KAZI NAZRUL UNIVERSITY, ASANSOL</h4>
-                <p className="text-sm font-mono">BCA, Computer Science — 2016 - 2019</p>
-                <p className="text-xs mt-2">Grade: 7.8</p>
-                <p className="text-sm mt-2">Relevant: Manual Testing, Selenium, Jenkins, Java, Python, Agile</p>
+                <p className="text-sm font-mono text-slate-300">BCA, Computer Science — 2016 - 2019</p>
+                <p className="text-xs mt-2 text-slate-300">Grade: 7.8</p>
+                <p className="text-sm mt-2 text-slate-300">Relevant: Manual Testing, Selenium, Jenkins, Java, Python, Agile</p>
               </div>
               <div className="bg-[#0b1220] p-4 rounded-lg">
                 <h4 className="text-teal-300 font-bold">Bidhan Chandra College</h4>
-                <p className="text-sm font-mono">Higher Secondary, Pure Science — Jul 2014 - Jul 2016</p>
-                <p className="text-xs mt-2">Grade: 82%</p>
+                <p className="text-sm font-mono text-slate-300">Higher Secondary, Pure Science — Jul 2014 - Jul 2016</p>
+                <p className="text-xs mt-2 text-slate-300">Grade: 82%</p>
               </div>
             </div>
           </div>

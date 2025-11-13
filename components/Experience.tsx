@@ -113,12 +113,12 @@ const RoleItem: React.FC<{ experience: ExperienceType; isNested?: boolean }> = (
         </div>
       )}
       <h4 className={`${isNested ? 'text-lg' : 'text-xl'} font-bold text-slate-100 mb-1`}>{experience.role}</h4>
-      <p className="text-sm text-slate-400 font-mono mb-4">{experience.period}</p>
+      <p className="text-sm text-slate-300 font-mono mb-4">{experience.period}</p>
       <ul className="space-y-2 mb-4">
         {experience.description.map((point, index) => (
           <li key={index} className="flex text-sm">
             <span className="text-teal-300 mr-3 mt-0.5">▹</span>
-            <span className="text-slate-400">{point}</span>
+            <span className="text-slate-300">{point}</span>
           </li>
         ))}
       </ul>

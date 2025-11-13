@@ -68,26 +68,26 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
             ) : (
               <Icons.Award className="w-10 h-10 text-teal-300" />
             )}
-            {project.company && <span className="text-sm text-slate-400 font-mono">{project.company}</span>}
+            {project.company && <span className="text-sm text-slate-300 font-mono">{project.company}</span>}
           </div>
           <div className="flex items-center space-x-4">
             {project.githubUrl && (
-              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
+              <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-teal-300 transition-colors">
                 <Icons.GitHub size={24} />
               </a>
             )}
             {project.liveUrl && (
-              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-teal-300 transition-colors">
+              <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-teal-300 transition-colors">
                 <Icons.ExternalLink size={24} />
               </a>
             )}
           </div>
         </div>
         <h3 className="text-xl font-bold text-slate-100 mb-2 group-hover:text-teal-300">{project.title}</h3>
-        {project.period && <p className="text-xs text-slate-400 font-mono mb-2">{project.period}</p>}
-        <p className="text-slate-400 mb-4 text-sm">{project.description}</p>
+        {project.period && <p className="text-xs text-slate-300 font-mono mb-2">{project.period}</p>}
+        <p className="text-slate-200 mb-4 text-sm">{project.description}</p>
       </div>
-      <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-400">
+      <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-300">
         {project.tech.map((t) => (
           <span key={t}>{t}</span>
         ))}

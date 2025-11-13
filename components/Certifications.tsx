@@ -56,8 +56,8 @@ const CertificationCard: React.FC<{ cert: CertificationType }> = ({ cert }) => {
       </div>
       <div>
         <h3 className="text-lg font-bold text-slate-100">{cert.name}</h3>
-        <p className="text-sm text-slate-400">{cert.issuer}</p>
-        {cert.date && <p className="text-xs text-slate-500 font-mono mt-1">{cert.date}</p>}
+        <p className="text-sm text-slate-300">{cert.issuer}</p>
+        {cert.date && <p className="text-xs text-slate-400 font-mono mt-1">{cert.date}</p>}
       </div>
     </div>
   );

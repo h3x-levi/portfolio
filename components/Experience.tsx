@@ -14,7 +14,7 @@ const amazonRoles: ExperienceType[] = [
     role: 'DevOps Engineer',
     company: 'Amazon',
     period: 'Sep 2025 - Present · 3 mos',
-    logo: '/public/amazon.svg',
+    logo: '/amazon.svg',
     description: [
       'Building and scaling cloud infrastructure and DevOps pipelines.',
     ],
@@ -24,7 +24,7 @@ const amazonRoles: ExperienceType[] = [
     role: 'QA Engineer',
     company: 'Amazon',
     period: 'Dec 2024 - Sep 2025 · 10 mos',
-    logo: '/public/amazon.svg',
+    logo: '/amazon.svg',
     description: [
       'Executed test case instructions and reported discrepancies on Fire TV and non-Amazon devices.',
       'Created detailed test cases and scripts for manual and automated testing using Testrail.',
@@ -36,7 +36,7 @@ const amazonRoles: ExperienceType[] = [
     role: 'Device Associate',
     company: 'Amazon',
     period: 'Feb 2022 - Dec 2024 · 2 yrs 11 mos',
-    logo: '/public/amazon.svg',
+    logo: '/amazon.svg',
     description: [
         'Executed comprehensive test cases and reported discrepancies on Amazon Fire TV devices.',
         'Developed automation scripts with Selenium WebDriver, Java, and Python for regression testing.',
@@ -76,7 +76,7 @@ const otherExperiences: ExperienceType[] = [
     role: 'Jio Advisor (Customer Service)',
     company: 'Concentrix',
     period: 'Feb 2018 - Jun 2018 · 5 mos',
-    logo: '/public/csx.svg',
+    logo: '/csx.svg',
     description: [
       'Handled all customer interactions with ownership and professionalism within established guidelines.',
       'Achieved 95% customer satisfaction rating through solution-focused communication.',
@@ -142,7 +142,7 @@ const Experience: React.FC = () => {
       </h2>
       <div className="max-w-3xl">
         {/* Amazon - grouped with nested roles */}
-        <CompanyHeader company="Amazon" totalPeriod="3 yrs 10 mos" logo="/public/amazon.svg" />
+        <CompanyHeader company="Amazon" totalPeriod="3 yrs 10 mos" logo="/amazon.svg" />
         <div className="mb-12">
           {amazonRoles.map((role, index) => (
             <RoleItem key={index} experience={role} isNested={true} />

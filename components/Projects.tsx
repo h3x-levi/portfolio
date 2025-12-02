@@ -41,22 +41,44 @@ const featuredProject = {
   ],
   videoUrl: '/ira-ai/demo.mp4',
   prominentImage: '/ira-ai/dashboard_3.png',
-  codeSnippet: `class IraSystem:
-    def __init__(self):
-        # Hybrid Intelligence: Local Llama-3 + GPT-4 Fallback
-        self.local_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3-8b")
-        self.memory = DuckDBMemory(path="./brain.db")
-        self.voice = WakeWordEngine(engine="porcupine")
+  codeSnippet: `# IRA AI - Core System Architecture
+class IraAI:
+    def __init__(self, model_name="facebook/blenderbot-1B-distill"):
+        # Core Components
+        self.conversation_manager = ConversationManager(max_context_messages=2)
+        self.db = DatabaseManager()  # SQLite-based persistence
+        self.rule_based_responder = RuleBasedResponder()
+        self.prompt_formatter = PromptFormatter()
         
-    async def process_stream(self, audio_stream: bytes):
-        """Real-time voice processing pipeline"""
-        if self.voice.detect_wake_word(audio_stream):
-            # Semantic search in vector memory
-            context = self.memory.search(query_embedding, limit=5)
-            
-            # Generate response using hybrid engine
-            async for token in self.llm.generate_stream(context):
-                yield token`,
+        # AI Engine with Fallback Chain
+        self.model_loader = ModelLoader()
+        self.device = self._detect_device()  # CPU-optimized
+        
+        # Personality & Security
+        self.personality = {
+            "name": "IRA",
+            "traits": ["intelligent", "helpful", "mysterious", "powerful"],
+            "speaking_style": "confident and knowledgeable"
+        }
+        self._load_security_settings()  # Content filtering, rate limiting
+        
+    def generate_response(self, user_input: str) -> str:
+        """Generate AI response with multi-layer fallback"""
+        # Security filters
+        user_input = self._apply_security_filters(user_input)
+        
+        # Conversation context
+        context = self.conversation_manager.get_context()
+        
+        # Generate with transformer model
+        response = self.generator(
+            self.prompt_formatter.format(user_input, context),
+            max_new_tokens=200,
+            temperature=0.8,
+            top_p=0.85
+        )
+        
+        return response`,
 } as ProjectType;
 
 // Personal / OSS projects

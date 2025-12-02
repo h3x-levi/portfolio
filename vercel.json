@@ -8,7 +8,6 @@
     "autoExposeSystemEnvs": true
   },
   "env": [],
-  "envPrefix": "VITE_",
   "ignoreCommand": "git diff --quiet HEAD^ HEAD -- . ':(exclude)dist' ':(exclude).vercel' ':(exclude)vercel.json' ':(exclude)node_modules'",
   "installCommand": "npm install --legacy-peer-deps"
 }

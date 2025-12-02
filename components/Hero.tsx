@@ -9,7 +9,7 @@ const Hero: React.FC<HeroProps> = ({ setActivePage }) => {
   const [typedTitle, setTypedTitle] = useState('');
   const [showCursor, setShowCursor] = useState(true);
   const fullTitle = 'DevOps Engineer | Cypress, Selenium & Python Automation';
-  
+
   useEffect(() => {
     setTypedTitle('');
     const typingInterval = setInterval(() => {
@@ -25,7 +25,7 @@ const Hero: React.FC<HeroProps> = ({ setActivePage }) => {
 
     return () => clearInterval(typingInterval);
   }, []);
-  
+
   useEffect(() => {
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev);
@@ -50,11 +50,11 @@ const Hero: React.FC<HeroProps> = ({ setActivePage }) => {
           DevOps Engineer • Automation-focused • Cloud-native
         </h2>
         <div className="text-2xl sm:text-4xl text-teal-300 font-mono">
-            {typedTitle}
-            <span className={`transition-opacity duration-100 ${showCursor ? 'opacity-100' : 'opacity-0'}`}>|</span>
+          {typedTitle}
+          <span className={`transition-opacity duration-100 ${showCursor ? 'opacity-100' : 'opacity-0'}`}>|</span>
         </div>
-        <p className="text-slate-200 max-w-xl text-lg">
-          I combine 5+ years of experience in automation and DevOps with strong skills in Python, Cypress, and Selenium. I focus on building reliable CI/CD pipelines, test automation, and scalable cloud infrastructure that reduces manual work and improves delivery velocity.
+        <p className="text-slate-200 max-w-2xl text-lg leading-relaxed">
+          AWS-focused DevOps Engineer with a strong foundation in infrastructure automation and incident management. Proficient in deploying scalable solutions using Terraform, Docker, and Ansible, with hands-on experience managing high-severity incidents for Amazon Luna and cloud platforms. Adept at creating detailed SOPs, optimizing alarm thresholds, and executing seamless software deployments. Continuous learner with certifications in AWS and Terraform, dedicated to enhancing system reliability and minimizing downtime.
         </p>
         <div>
           <a

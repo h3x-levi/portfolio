@@ -25,6 +25,40 @@ const companyProjects: ProjectType[] = [
   },
 ];
 
+// Featured project
+const featuredProject = {
+  title: 'IRA AI',
+  description:
+    '**[Proprietary/Closed Source]** An advanced, autonomous Artificial Intelligence system engineered in **Python**, serving as a central nervous system for personal automation and data synthesis. \n\n**Core Architecture:**\nBuilt on a **Hybrid Intelligence Model**, utilizing **Hugging Face Transformers** (PyTorch) for local, low-latency NLU and intent classification, seamlessly cascading to **OpenAI GPT-4** or **Anthropic Claude 3.5** for complex reasoning tasks. The system exposes a high-performance API via **FastAPI** and **Uvicorn**, communicating with a React-based frontend over **WebSockets** for real-time streaming.\n\n**Data & Memory:**\nImplements a multi-tiered storage architecture:\n- **DuckDB**: For high-performance vector embeddings and analytical queries.\n- **SQLite (SQLAlchemy)**: For structured transactional data and conversation history.\n- **LMDB**: For lightning-fast key-value caching of context.\n\n**Voice & Sensory:**\nFeatures a sophisticated voice pipeline using **PvPorcupine** for high-accuracy wake-word detection, **SpeechRecognition** for STT, and **pyttsx3** for offline synthesis. The system includes a custom **Spacy** NLP pipeline for entity extraction and **Sentence-Transformers** for semantic memory retrieval.',
+  tech: ['Python', 'PyTorch', 'Transformers', 'FastAPI', 'DuckDB', 'SQLite', 'WebSockets', 'Porcupine', 'Spacy'],
+  screenshots: [
+    '/ira-ai/dashboard_1.png',
+    '/ira-ai/dashboard_2.png',
+    '/ira-ai/dashboard_3.png',
+    '/ira-ai/keyframe_1.png',
+    '/ira-ai/keyframe_2.png',
+    '/ira-ai/keyframe_3.png',
+  ],
+  videoUrl: '/ira-ai/demo.mp4',
+  prominentImage: '/ira-ai/dashboard_3.png',
+  codeSnippet: `class IraSystem:
+    def __init__(self):
+        # Hybrid Intelligence: Local Llama-3 + GPT-4 Fallback
+        self.local_model = AutoModelForCausalLM.from_pretrained("meta-llama/Llama-3-8b")
+        self.memory = DuckDBMemory(path="./brain.db")
+        self.voice = WakeWordEngine(engine="porcupine")
+        
+    async def process_stream(self, audio_stream: bytes):
+        """Real-time voice processing pipeline"""
+        if self.voice.detect_wake_word(audio_stream):
+            # Semantic search in vector memory
+            context = self.memory.search(query_embedding, limit=5)
+            
+            # Generate response using hybrid engine
+            async for token in self.llm.generate_stream(context):
+                yield token`,
+} as ProjectType;
+
 // Personal / OSS projects
 const personalProjects: ProjectType[] = [
   {
@@ -34,8 +68,7 @@ const personalProjects: ProjectType[] = [
     tech: ['Dart', 'Flutter', 'Riverpod', 'Firebase Auth', 'Firestore', 'flutter_secure_storage', 'Biometrics', 'NFC', 'OAuth 2.0', 'FCM'],
     githubUrl: 'https://github.com/h3x-levi/Wallet',
     screenshots: [
-      '/bharat-wallet/shot_1.png',
-      '/bharat-wallet/shot_2.png',
+      '/bharat-wallet/shot_overview.png',
       '/bharat-wallet/shot_3.png',
       '/bharat-wallet/shot_5.png',
       '/bharat-wallet/shot_7.png',
@@ -71,28 +104,258 @@ const Hero: React.FC = ({ setActivePage }) => {
   return <h2>{typedTitle}</h2>;
 };`,
   },
-  {
-    title: 'IaC for Resilient Web Infrastructure',
-    description:
-      'Authored Terraform modules to define and provision a scalable and secure three-tier web application infrastructure on AWS. This includes a custom VPC, public/private subnets, security groups, an auto-scaling group for the web tier, and an RDS instance for the database.',
-    tech: ['Terraform', 'AWS', 'VPC', 'EC2', 'RDS', 'S3'],
-    githubUrl: '#',
-  },
-  {
-    title: 'Containerization of Legacy Application',
-    description:
-      'Led the initiative to containerize a monolithic Java application using Docker. This effort involved creating optimized Docker images, setting up Docker Compose for local development, and deploying the containerized application to AWS ECS, improving portability and simplifying deployments.',
-    tech: ['Docker', 'Java', 'AWS ECS', 'Docker Compose'],
-    liveUrl: '#',
-  },
-  {
-    title: 'Centralized Logging & Monitoring Solution',
-    description:
-      'Deployed a centralized logging stack using EFK (Elasticsearch, Fluentd, Kibana) on Kubernetes to aggregate logs from dozens of services. This provided developers with real-time log analysis capabilities and drastically reduced troubleshooting time.',
-    tech: ['EFK Stack', 'Kubernetes', 'Fluentd', 'Elasticsearch', 'Kibana'],
-    githubUrl: '#',
-  },
 ];
+
+const FeaturedProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
+  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+
+  const openModal = (index: number) => {
+    setSelectedImage(index);
+  };
+
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
+  const nextImage = () => {
+    if (selectedImage !== null && project.screenshots) {
+      setSelectedImage((selectedImage + 1) % project.screenshots.length);
+    }
+  };
+
+  const prevImage = () => {
+    if (selectedImage !== null && project.screenshots) {
+      setSelectedImage((selectedImage - 1 + project.screenshots.length) % project.screenshots.length);
+    }
+  };
+
+  // Keyboard navigation
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (selectedImage === null) return;
+      if (e.key === 'Escape') closeModal();
+      if (e.key === 'ArrowRight') nextImage();
+      if (e.key === 'ArrowLeft') prevImage();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedImage]);
+
+  return (
+    <>
+      <div className="bg-[#112240] rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-teal-500/10 mb-8">
+        <div className="flex justify-between items-start mb-6">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 text-teal-300">
+              <Icons.Award size="100%" />
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-slate-100">{project.title}</h3>
+              <span className="text-sm text-teal-300 font-mono">Featured Project</span>
+            </div>
+          </div>
+        </div>
+
+        {project.prominentImage ? (
+          /* Layout with Prominent Image */
+          <div className="mb-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+              {/* Video */}
+              {project.videoUrl && (
+                <div className="h-full">
+                  <video
+                    controls
+                    className="w-full h-full object-cover rounded-lg border border-slate-700 shadow-lg"
+                    poster={project.screenshots?.[0]}
+                  >
+                    <source src={project.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
+
+              {/* Prominent Image */}
+              <div
+                className="h-full rounded-lg border border-slate-700 overflow-hidden shadow-lg cursor-pointer group relative"
+                onClick={() => {
+                  const idx = project.screenshots?.findIndex(s => s === project.prominentImage);
+                  if (idx !== undefined && idx >= 0) openModal(idx);
+                }}
+              >
+                <div className="absolute inset-0 bg-teal-500/0 group-hover:bg-teal-500/10 transition-colors duration-300 z-10 flex items-center justify-center">
+                  <div className="text-teal-300 opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all duration-300">
+                    <Icons.Maximize size={48} />
+                  </div>
+                </div>
+                <img
+                  src={project.prominentImage}
+                  alt={`${project.title} prominent view`}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+            </div>
+
+            {/* Thumbnails */}
+            {project.screenshots && project.screenshots.length > 0 && (
+              <div className="overflow-x-auto mb-8">
+                <div className="flex gap-2 pb-2">
+                  {project.screenshots.map((screenshot, idx) => (
+                    <div
+                      key={idx}
+                      className={`flex-shrink-0 w-32 h-24 rounded-lg overflow-hidden border transition-all cursor-pointer ${screenshot === project.prominentImage
+                        ? 'border-teal-500 ring-2 ring-teal-500/20'
+                        : 'border-slate-700 hover:border-teal-300/50'
+                        }`}
+                      onClick={() => openModal(idx)}
+                    >
+                      <img
+                        src={screenshot}
+                        alt={`${project.title} screenshot ${idx + 1}`}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Description & Tech */}
+            <div>
+              <p className="text-slate-200 mb-6 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: project.description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }}></p>
+
+              <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-300">
+                {project.tech.map((t) => (
+                  <span key={t} className="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/50">{t}</span>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* Standard Layout */
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            {/* Left: Video & Screenshots */}
+            <div>
+              {project.videoUrl && (
+                <div className="mb-4">
+                  <video
+                    controls
+                    className="w-full rounded-lg border border-slate-700 shadow-lg"
+                    poster={project.screenshots?.[0]}
+                  >
+                    <source src={project.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
+
+              {project.screenshots && project.screenshots.length > 0 && (
+                <div className="overflow-x-auto">
+                  <div className="flex gap-2 pb-2">
+                    {project.screenshots.map((screenshot, idx) => (
+                      <div
+                        key={idx}
+                        className="flex-shrink-0 w-32 h-24 rounded-lg overflow-hidden border border-slate-700 hover:border-teal-300/50 transition-colors cursor-pointer"
+                        onClick={() => openModal(idx)}
+                      >
+                        <img
+                          src={screenshot}
+                          alt={`${project.title} screenshot ${idx + 1}`}
+                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Right: Description */}
+            <div className="flex flex-col justify-between">
+              <div>
+                <p className="text-slate-200 mb-6 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: project.description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }}></p>
+
+                <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-300 mb-6">
+                  {project.tech.map((t) => (
+                    <span key={t} className="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/50">{t}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Code Snippet - Full Width */}
+        {project.codeSnippet && (
+          <div className="mt-6">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-xs font-mono text-teal-300">System Architecture</span>
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50"></div>
+              </div>
+            </div>
+            <div className="bg-[#0a192f] border border-slate-700 rounded-lg p-4 overflow-x-auto shadow-inner">
+              <pre className="text-xs text-slate-300 font-mono leading-relaxed">
+                <code>{project.codeSnippet}</code>
+              </pre>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Image Modal */}
+      {selectedImage !== null && project.screenshots && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          onClick={closeModal}
+        >
+          <button
+            onClick={closeModal}
+            className="absolute top-4 right-4 text-white hover:text-teal-300 transition-colors z-10"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {project.screenshots.length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); prevImage(); }}
+              className="absolute left-4 text-white hover:text-teal-300 transition-colors z-10"
+            >
+              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          )}
+
+          <div className="max-w-4xl max-h-[90vh] p-4" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={project.screenshots[selectedImage]}
+              alt={`${project.title} screenshot ${selectedImage + 1}`}
+              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+            />
+            <p className="text-center text-slate-300 mt-4 font-mono text-sm">
+              {selectedImage + 1} / {project.screenshots.length}
+            </p>
+          </div>
+
+          {project.screenshots.length > 1 && (
+            <button
+              onClick={(e) => { e.stopPropagation(); nextImage(); }}
+              className="absolute right-4 text-white hover:text-teal-300 transition-colors z-10"
+            >
+              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          )}
+        </div>
+      )}
+    </>
+  );
+};
 
 const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
@@ -138,7 +401,9 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
               {project.logo ? (
                 <img src={project.logo} alt={project.company || project.title} className="w-10 h-10 object-contain" />
               ) : (
-                <Icons.Award className="w-10 h-10 text-teal-300" />
+                <div className="w-10 h-10 text-teal-300">
+                  <Icons.Award size="100%" />
+                </div>
               )}
               {project.company && <span className="text-sm text-slate-300 font-mono">{project.company}</span>}
             </div>
@@ -161,7 +426,7 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
 
           {/* Screenshot Gallery */}
           {project.screenshots && project.screenshots.length > 0 && (
-            <div className="mb-4 overflow-x-auto">
+            <div className="overflow-x-auto">
               <div className="flex gap-2 pb-2">
                 {project.screenshots.map((screenshot, idx) => (
                   <div
@@ -182,7 +447,7 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
 
           {/* Code Snippet */}
           {project.codeSnippet && (
-            <div className="mb-4">
+            <div>
               <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 overflow-x-auto">
                 <pre className="text-xs text-slate-300 font-mono leading-relaxed">
                   <code>{project.codeSnippet}</code>
@@ -258,17 +523,21 @@ const Projects: React.FC = () => {
   return (
     <AnimatedSection id="projects">
       <h2 className="text-3xl font-bold text-slate-100 mb-8 relative inline-block">
-        <span className="text-teal-300">03.</span> Things I've Built
+        <span className="text-teal-300">03.</span> Projects
         <span className="absolute bottom-[-10px] left-0 w-24 h-1 bg-teal-300/50"></span>
       </h2>
-      <h3 className="text-teal-300 font-mono mb-4">Company Projects</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         {companyProjects.map((project, index) => (
           <ProjectCard key={index} project={project} />
         ))}
       </div>
 
-      <h3 className="text-teal-300 font-mono mb-4">Personal Projects</h3>
+      <h3 className="text-teal-300 font-mono mb-6">Personal Projects</h3>
+
+      {/* Featured Project - Full Width */}
+      <FeaturedProjectCard project={featuredProject} />
+
+      {/* Other Personal Projects */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {personalProjects.map((project, index) => (
           <ProjectCard key={index} project={project} />

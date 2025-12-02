@@ -3,6 +3,7 @@ import {
   FiLinkedin,
   FiMail,
   FiExternalLink,
+  FiMaximize,
 } from 'react-icons/fi';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
 import { GoProjectSymlink as FiAward } from "react-icons/go";
@@ -29,4 +30,5 @@ export const Icons = {
   Docker: SiDocker,
   Udemy: SiUdemy,
   Google: SiGoogle,
+  Maximize: FiMaximize,
 };

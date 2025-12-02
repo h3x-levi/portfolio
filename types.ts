@@ -21,6 +21,8 @@ export interface Project {
   logo?: string;
   screenshots?: string[];
   codeSnippet?: string;
+  videoUrl?: string;
+  prominentImage?: string;
 }
 
 export interface Certification {

@@ -364,19 +364,19 @@ const FeaturedProjectCard: React.FC<{ project: ProjectType }> = ({ project }) =>
             </button>
           )}
 
-          {/* Image Panel - Medium Size, Fixed */}
+          {/* Image Panel - Smaller, Fixed */}
           <div
-            className="relative bg-slate-900/50 rounded-xl border border-slate-700 shadow-2xl p-6 max-w-4xl w-full mx-6"
+            className="relative bg-[#112240] rounded-xl border border-slate-700 shadow-2xl p-4 max-w-3xl w-full mx-12"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-center" style={{ height: '70vh' }}>
+            <div className="flex items-center justify-center bg-black/20 rounded-lg overflow-hidden" style={{ height: '60vh' }}>
               <img
                 src={project.screenshots[selectedImage]}
                 alt={`${project.title} screenshot ${selectedImage + 1}`}
-                className="max-w-full max-h-full object-contain rounded-lg"
+                className="max-w-full max-h-full object-contain"
               />
             </div>
-            <p className="text-center text-slate-300 mt-4 font-mono text-sm">
+            <p className="text-center text-slate-300 mt-3 font-mono text-sm">
               {selectedImage + 1} / {project.screenshots.length}
             </p>
           </div>
@@ -543,19 +543,19 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
             </button>
           )}
 
-          {/* Image Panel - Medium Size, Fixed */}
+          {/* Image Panel - Smaller, Fixed */}
           <div
-            className="relative bg-slate-900/50 rounded-xl border border-slate-700 shadow-2xl p-6 max-w-4xl w-full mx-6"
+            className="relative bg-[#112240] rounded-xl border border-slate-700 shadow-2xl p-4 max-w-3xl w-full mx-12"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-center" style={{ height: '70vh' }}>
+            <div className="flex items-center justify-center bg-black/20 rounded-lg overflow-hidden" style={{ height: '60vh' }}>
               <img
                 src={project.screenshots[selectedImage]}
                 alt={`${project.title} screenshot ${selectedImage + 1}`}
-                className="max-w-full max-h-full object-contain rounded-lg"
+                className="max-w-full max-h-full object-contain"
               />
             </div>
-            <p className="text-center text-slate-300 mt-4 font-mono text-sm">
+            <p className="text-center text-slate-300 mt-3 font-mono text-sm">
               {selectedImage + 1} / {project.screenshots.length}
             </p>
           </div>

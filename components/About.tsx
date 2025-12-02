@@ -2,11 +2,61 @@
 import React from 'react';
 import AnimatedSection from './AnimatedSection';
 
-const skills = [
-  'AWS (EC2, EKS, S3, Lambda)', 'Azure DevOps', 'GCP', 'Terraform',
-  'Kubernetes', 'Docker', 'Ansible', 'Python',
-  'Jenkins', 'GitLab CI', 'ArgoCD', 'Prometheus & Grafana'
-];
+const skillCategories = {
+  'Cloud & Infrastructure': [
+    'AWS (EC2, EKS, S3, Lambda)',
+    'Azure DevOps',
+    'GCP',
+    'Terraform',
+    'Kubernetes',
+    'Docker',
+    'Ansible',
+    'Infrastructure as Code'
+  ],
+  'CI/CD & DevOps': [
+    'Jenkins',
+    'GitLab CI',
+    'ArgoCD',
+    'Prometheus & Grafana',
+    'Automation',
+    'DevOps Pipelines'
+  ],
+  'Testing & QA': [
+    'Selenium WebDriver',
+    'Cypress',
+    'Test Automation',
+    'QA Automation',
+    'Manual Testing',
+    'Regression Testing',
+    'Performance Testing',
+    'Functional Testing',
+    'Agile Testing',
+    'Test Planning',
+    'Test Execution'
+  ],
+  'Programming & Scripting': [
+    'Python',
+    'Java',
+    'JavaScript',
+    'C',
+    'Shell Scripting'
+  ],
+  'Tools & Platforms': [
+    'Jira',
+    'Testrail',
+    'Maven',
+    'Git',
+    'Linux',
+    'MemoryDB',
+    'Databases'
+  ],
+  'Methodologies': [
+    'Agile/Scrum',
+    'Quality Assurance',
+    'Software Quality',
+    'Quality Engineering'
+  ]
+};
 
 const About: React.FC = () => {
   return (
@@ -44,17 +94,37 @@ const About: React.FC = () => {
             </ul>
           </div>
 
-          <div className="mt-4">
-            <h3 className="text-slate-100 font-semibold mb-2">Technologies</h3>
-            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2 font-mono text-sm">
-              {skills.map(skill => (
-                <li key={skill} className="flex items-center text-slate-200">
-                  <span className="text-teal-300 mr-2">▹</span>{skill}
-                </li>
-              ))}
-            </ul>
+          {/* Endorsements Badge */}
+          <div className="mt-4 inline-flex items-center gap-2 bg-teal-400/10 border border-teal-300/30 rounded-full px-4 py-2">
+            <svg className="w-5 h-5 text-teal-300" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+            <span className="text-sm font-mono text-teal-300">
+              <strong>10+</strong> LinkedIn Skill Endorsements
+            </span>
           </div>
-          
+
+          <div className="mt-6">
+            <h3 className="text-slate-100 font-semibold mb-4 text-xl">Technical Skills</h3>
+            <div className="space-y-6">
+              {Object.entries(skillCategories).map(([category, skills]) => (
+                <div key={category}>
+                  <h4 className="text-teal-300 font-mono text-sm mb-2">{category}</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {skills.map((skill) => (
+                      <span
+                        key={skill}
+                        className="bg-slate-800/50 border border-slate-700 text-slate-200 text-xs font-mono px-3 py-1.5 rounded-md hover:border-teal-300/50 transition-colors"
+                      >
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           <div className="mt-8">
             <h3 className="text-slate-100 font-semibold mb-4">Education</h3>
             <div className="grid sm:grid-cols-2 gap-4 text-slate-200">
@@ -75,7 +145,7 @@ const About: React.FC = () => {
 
         <div className="md:col-span-2 flex justify-center md:justify-end">
           <div className="w-64 rounded-lg overflow-hidden relative border-2 border-teal-300/20">
-            <img src="/profile.jpg" alt="Akshay Mondal" className="w-full h-full object-cover"/>
+            <img src="/profile.jpg" alt="Akshay Mondal" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>
           </div>
         </div>

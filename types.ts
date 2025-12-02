@@ -19,6 +19,8 @@ export interface Project {
   company?: string;
   period?: string;
   logo?: string;
+  screenshots?: string[];
+  codeSnippet?: string;
 }
 
 export interface Certification {

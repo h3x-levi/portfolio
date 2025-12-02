@@ -153,15 +153,17 @@ const FeaturedProjectCard: React.FC<{ project: ProjectType }> = ({ project }) =>
 
   // Keyboard navigation
   React.useEffect(() => {
+    if (selectedImage === null) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (selectedImage === null) return;
       if (e.key === 'Escape') closeModal();
       if (e.key === 'ArrowRight') nextImage();
       if (e.key === 'ArrowLeft') prevImage();
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImage]);
+  }, [selectedImage, project.screenshots]);
 
   return (
     <>
@@ -329,46 +331,53 @@ const FeaturedProjectCard: React.FC<{ project: ProjectType }> = ({ project }) =>
       {/* Image Modal */}
       {selectedImage !== null && project.screenshots && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
           onClick={closeModal}
         >
+          {/* Close Button - Always Visible */}
           <button
-            onClick={closeModal}
-            className="absolute top-4 right-4 text-white hover:text-teal-300 transition-colors z-10"
+            onClick={(e) => { e.stopPropagation(); closeModal(); }}
+            className="absolute top-4 right-4 bg-slate-800/80 hover:bg-teal-500/20 text-white hover:text-teal-300 transition-all duration-200 z-[10000] p-2 rounded-full border border-slate-700 hover:border-teal-500"
+            aria-label="Close modal"
           >
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
+          {/* Previous Button */}
           {project.screenshots.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              className="absolute left-4 text-white hover:text-teal-300 transition-colors z-10"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-slate-800/80 hover:bg-teal-500/20 text-white hover:text-teal-300 transition-all duration-200 z-[10000] p-3 rounded-full border border-slate-700 hover:border-teal-500"
+              aria-label="Previous image"
             >
-              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
           )}
 
-          <div className="max-w-4xl max-h-[90vh] p-4" onClick={(e) => e.stopPropagation()}>
+          {/* Image Container */}
+          <div className="relative max-w-7xl max-h-[90vh] flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <img
               src={project.screenshots[selectedImage]}
               alt={`${project.title} screenshot ${selectedImage + 1}`}
-              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
             />
-            <p className="text-center text-slate-300 mt-4 font-mono text-sm">
+            <p className="text-center text-slate-300 mt-4 font-mono text-sm bg-slate-800/50 px-4 py-2 rounded-full">
               {selectedImage + 1} / {project.screenshots.length}
             </p>
           </div>
 
+          {/* Next Button */}
           {project.screenshots.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              className="absolute right-4 text-white hover:text-teal-300 transition-colors z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-slate-800/80 hover:bg-teal-500/20 text-white hover:text-teal-300 transition-all duration-200 z-[10000] p-3 rounded-full border border-slate-700 hover:border-teal-500"
+              aria-label="Next image"
             >
-              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>
@@ -404,15 +413,17 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
 
   // Keyboard navigation
   React.useEffect(() => {
+    if (selectedImage === null) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (selectedImage === null) return;
       if (e.key === 'Escape') closeModal();
       if (e.key === 'ArrowRight') nextImage();
       if (e.key === 'ArrowLeft') prevImage();
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedImage]);
+  }, [selectedImage, project.screenshots]);
 
   return (
     <>
@@ -488,14 +499,16 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
       {/* Image Modal */}
       {selectedImage !== null && project.screenshots && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/95 backdrop-blur-sm p-4"
           onClick={closeModal}
         >
+          {/* Close Button - Always Visible */}
           <button
-            onClick={closeModal}
-            className="absolute top-4 right-4 text-white hover:text-teal-300 transition-colors z-10"
+            onClick={(e) => { e.stopPropagation(); closeModal(); }}
+            className="absolute top-4 right-4 bg-slate-800/80 hover:bg-teal-500/20 text-white hover:text-teal-300 transition-all duration-200 z-[10000] p-2 rounded-full border border-slate-700 hover:border-teal-500"
+            aria-label="Close modal"
           >
-            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -504,22 +517,23 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
           {project.screenshots.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              className="absolute left-4 text-white hover:text-teal-300 transition-colors z-10"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-slate-800/80 hover:bg-teal-500/20 text-white hover:text-teal-300 transition-all duration-200 z-[10000] p-3 rounded-full border border-slate-700 hover:border-teal-500"
+              aria-label="Previous image"
             >
-              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
             </button>
           )}
 
-          {/* Image */}
-          <div className="max-w-4xl max-h-[90vh] p-4" onClick={(e) => e.stopPropagation()}>
+          {/* Image Container */}
+          <div className="relative max-w-7xl max-h-[90vh] flex flex-col items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <img
               src={project.screenshots[selectedImage]}
               alt={`${project.title} screenshot ${selectedImage + 1}`}
-              className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
+              className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
             />
-            <p className="text-center text-slate-300 mt-4 font-mono text-sm">
+            <p className="text-center text-slate-300 mt-4 font-mono text-sm bg-slate-800/50 px-4 py-2 rounded-full">
               {selectedImage + 1} / {project.screenshots.length}
             </p>
           </div>
@@ -528,9 +542,10 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
           {project.screenshots.length > 1 && (
             <button
               onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              className="absolute right-4 text-white hover:text-teal-300 transition-colors z-10"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-slate-800/80 hover:bg-teal-500/20 text-white hover:text-teal-300 transition-all duration-200 z-[10000] p-3 rounded-full border border-slate-700 hover:border-teal-500"
+              aria-label="Next image"
             >
-              <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </button>

@@ -40,7 +40,7 @@ const Hero: React.FC<HeroProps> = ({ setActivePage }) => {
   };
 
   return (
-    <section id="hero" className="min-h-screen flex flex-col justify-center items-start -mt-24">
+    <section id="hero" className="min-h-[calc(100vh-6rem)] flex flex-col justify-center items-start">
       <div className="w-full max-w-4xl space-y-6">
         <p className="text-teal-300 text-lg font-mono">Hi, my name is</p>
         <h1 className="text-4xl sm:text-6xl md:text-7xl font-bold text-slate-100 text-shadow leading-tight">

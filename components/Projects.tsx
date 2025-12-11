@@ -518,7 +518,7 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
         </div>
         <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-300 mt-4">
           {project.tech.map((t) => (
-            <span key={t}>{t}</span>
+            <span key={t} className="bg-teal-500/10 text-teal-300 px-2 py-1 rounded border border-teal-500/30">{t}</span>
           ))}
         </div>
       </div>

@@ -186,6 +186,17 @@ class IraAI:
 // Personal / OSS projects
 const personalProjects: ProjectType[] = [
   {
+    title: 'Image Downloader Chrome Extension',
+    description:
+      'A sophisticated Chrome extension engineered with **JavaScript ES6+** and **Chrome Extension Manifest V3** APIs for efficient bulk image downloading from web pages. \n\n**Core Features:**\n• **Smart Image Detection**: Automatically scans DOM for images using `document.querySelectorAll()` with intelligent filtering based on dimensions, file size, and format validation\n• **Bulk Selection Interface**: Interactive checkbox system for multi-image selection with "Select All" and category-based filtering options\n• **Advanced Download Management**: Utilizes Chrome Downloads API with custom filename templating, supporting variables like `{domain}`, `{timestamp}`, `{index}`, and `{original-name}`\n• **Organized Storage**: Automatic folder creation by website domain and date, with user-configurable directory structures\n• **Format Support**: Handles JPG, PNG, GIF, WebP, SVG, and AVIF formats with automatic format detection and conversion options\n• **Preview System**: In-extension image preview with zoom functionality and metadata display (dimensions, file size, format)\n• **Performance Optimization**: Implements lazy loading for large image sets and background processing to prevent UI blocking\n\n**Technical Architecture:**\nBuilt using Chrome Extension Manifest V3 with service workers for background processing, content scripts for DOM manipulation, and popup UI for user interaction. Implements secure cross-origin resource sharing (CORS) handling and respects website robots.txt policies.',
+    tech: ['JavaScript', 'Chrome Extension API', 'HTML5', 'CSS3', 'Chrome Storage API', 'Downloads API', 'Tabs API'],
+    screenshots: [
+      '/chrome-extension/chrome-ext-1.png',
+      '/chrome-extension/chrome-ext-2.png',
+      '/chrome-extension/chrome-ext-3.png',
+    ],
+  },
+  {
     title: 'Bharat Wallet',
     description:
       '**[Not Production Ready]** A comprehensive digital wallet application built entirely in **Dart** using the **Flutter framework**. Implements secure local-first architecture with encrypted storage using flutter_secure_storage, Firebase Authentication for user management, and Firestore for metadata synchronization. Features include biometric authentication (fingerprint/face ID) via local_auth, NFC card reading preparation with flutter_nfc_kit, OAuth 2.0 integration for Gmail import using flutter_appauth, real-time location services with geolocator, and Firebase Cloud Messaging for push notifications. State management handled through Riverpod for scalable reactive architecture. Designed with a focus on privacy—sensitive data never leaves the device, only metadata syncs to cloud.',
@@ -480,7 +491,7 @@ const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
                 {project.screenshots.map((screenshot, idx) => (
                   <div
                     key={idx}
-                    className="flex-shrink-0 w-32 h-64 rounded-lg overflow-hidden border border-slate-700 hover:border-teal-300/50 transition-colors cursor-pointer"
+                    className={`flex-shrink-0 ${project.title.includes('Chrome Extension') ? 'w-48 h-32' : 'w-32 h-64'} rounded-lg overflow-hidden border border-slate-700 hover:border-teal-300/50 transition-colors cursor-pointer`}
                     onClick={() => openModal(idx)}
                   >
                     <img

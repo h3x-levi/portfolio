@@ -195,6 +195,44 @@ const personalProjects: ProjectType[] = [
       '/chrome-extension/chrome-ext-2.png',
       '/chrome-extension/chrome-ext-3.png',
     ],
+    codeSnippet: `// Chrome Extension - Image Detection & Download
+chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
+  chrome.tabs.executeScript(tabs[0].id, {
+    code: \`
+      // Scan page for images
+      const images = Array.from(document.querySelectorAll('img'))
+        .filter(img => img.src && img.naturalWidth > 100)
+        .map(img => ({
+          src: img.src,
+          alt: img.alt || 'image',
+          width: img.naturalWidth,
+          height: img.naturalHeight
+        }));
+      
+      // Send results to popup
+      chrome.runtime.sendMessage({
+        action: 'imagesFound',
+        images: images,
+        domain: window.location.hostname
+      });
+    \`
+  });
+});
+
+// Download selected images with custom naming
+function downloadImages(selectedImages, pattern) {
+  selectedImages.forEach((img, index) => {
+    const filename = pattern
+      .replace('{domain}', img.domain)
+      .replace('{index}', index + 1)
+      .replace('{timestamp}', Date.now());
+    
+    chrome.downloads.download({
+      url: img.src,
+      filename: \`downloads/\${filename}.jpg\`
+    });
+  });
+}`,
   },
   {
     title: 'Bharat Wallet',

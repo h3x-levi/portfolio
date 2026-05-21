@@ -1,9 +1,15 @@
-
 import React from 'react';
-import { Certification as CertificationType } from '../types';
 import AnimatedSection from './AnimatedSection';
 
-const certifications: CertificationType[] = [
+interface CertType {
+  name: string;
+  issuer: string;
+  date: string;
+  credentialUrl?: string;
+  logo: string;
+}
+
+const certifications: CertType[] = [
   {
     name: 'Mastering Ansible',
     issuer: 'Udemy',
@@ -12,7 +18,7 @@ const certifications: CertificationType[] = [
     credentialUrl: 'https://www.udemy.com/certificate/UC-a8490d13-2b25-4e02-8283-f561990a319d/',
   },
   {
-    name: 'Learn DevOps: Infrastructure Automation With Terraform',
+    name: 'Infrastructure Automation With Terraform',
     issuer: 'Udemy',
     date: 'Issued Apr 2023',
     logo: '/udemy.svg',
@@ -23,72 +29,76 @@ const certifications: CertificationType[] = [
     issuer: 'Google',
     date: 'Issued Dec 2022',
     logo: '/google.svg',
-    credentialUrl: undefined,
   },
   {
-    name: 'AWS Cloud for CEO\'s',
+    name: "AWS Cloud for CEO's",
     issuer: 'Amazon Web Services',
     date: '',
     logo: '/aws.svg',
-    credentialUrl: undefined,
   },
   {
     name: 'AWS MemoryDB for Redis',
     issuer: 'Amazon Web Services',
     date: '',
     logo: '/aws.svg',
-    credentialUrl: undefined,
   },
   {
     name: 'Build With Amazon MemoryDB with Redis',
     issuer: 'Amazon Web Services',
     date: '',
     logo: '/aws.svg',
-    credentialUrl: undefined,
   },
 ];
 
-const CertificationCard: React.FC<{ cert: CertificationType }> = ({ cert }) => {
-  const cardContent = (
-    <div className="flex items-start space-x-4">
-      <div className="flex-shrink-0">
-        {cert.logo && <img src={cert.logo} alt={cert.issuer} className="w-12 h-12 object-contain" />}
-      </div>
-      <div>
-        <h3 className="text-lg font-bold text-slate-100">{cert.name}</h3>
-        <p className="text-sm text-slate-300">{cert.issuer}</p>
-        {cert.date && <p className="text-xs text-slate-400 font-mono mt-1">{cert.date}</p>}
-      </div>
-    </div>
-  );
-
-  if (cert.credentialUrl) {
-    return (
-      <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer" className="block p-6 bg-[#112240] rounded-lg shadow-lg hover:shadow-2xl hover:shadow-teal-500/10 transition-all duration-300 hover:-translate-y-2 cursor-pointer">
-        {cardContent}
-      </a>
-    );
-  }
-
-  return (
-    <div className="p-6 bg-[#112240] rounded-lg shadow-lg">
-      {cardContent}
-    </div>
-  );
-};
-
-
 const Certifications: React.FC = () => {
   return (
-    <AnimatedSection id="certifications">
-      <h2 className="text-3xl font-bold text-slate-100 mb-8 relative inline-block">
-        <span className="text-teal-300">04.</span> Certifications
-        <span className="absolute bottom-[-10px] left-0 w-24 h-1 bg-teal-300/50"></span>
-      </h2>
-      <div className="grid sm:grid-cols-2 gap-6">
-        {certifications.map((cert, index) => (
-          <CertificationCard key={index} cert={cert} />
-        ))}
+    <AnimatedSection id="certifications" className="py-20 md:py-28 bg-stone-100/50 dark:bg-stone-900/30">
+      <div className="max-w-6xl mx-auto px-6 md:px-8">
+        <h2 className="text-3xl font-extrabold text-stone-900 dark:text-stone-100 mb-10">
+          <span className="text-orange-600">04.</span> Certifications
+        </h2>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {certifications.map((cert, index) => {
+            const inner = (
+              <div className="flex items-start gap-4">
+                <div className="flex-shrink-0 w-11 h-11 rounded-lg bg-stone-100 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 flex items-center justify-center overflow-hidden p-1.5">
+                  <img src={cert.logo} alt={cert.issuer} className="w-full h-full object-contain dark:brightness-90" />
+                </div>
+                <div className="flex-grow min-w-0">
+                  <h3 className="text-stone-900 dark:text-stone-100 font-semibold text-sm leading-snug">{cert.name}</h3>
+                  <p className="text-stone-500 dark:text-stone-400 text-xs mt-0.5">{cert.issuer}</p>
+                  {cert.date && <p className="text-stone-400 dark:text-stone-500 text-xs font-mono mt-1">{cert.date}</p>}
+                </div>
+                {cert.credentialUrl && (
+                  <span className="flex-shrink-0 text-orange-600 dark:text-orange-400 text-xs font-medium mt-0.5">
+                    Verify →
+                  </span>
+                )}
+              </div>
+            );
+
+            if (cert.credentialUrl) {
+              return (
+                <a
+                  key={index}
+                  href={cert.credentialUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-xl p-5 hover:border-orange-300 dark:hover:border-orange-500 hover:shadow-md transition-[border-color,box-shadow,transform] duration-200 active:scale-98"
+                >
+                  {inner}
+                </a>
+              );
+            }
+
+            return (
+              <div key={index} className="bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-xl p-5">
+                {inner}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </AnimatedSection>
   );

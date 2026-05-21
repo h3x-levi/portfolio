@@ -1,138 +1,55 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { Project as ProjectType } from '../types';
 import AnimatedSection from './AnimatedSection';
 import { Icons } from './icons';
 
-// Image Modal Component using Portal
-const ImageModal: React.FC<{
-  isOpen: boolean;
-  images: string[];
-  currentIndex: number;
+/* ───────────────────────── Types ───────────────────────── */
+interface FeaturedProject {
   title: string;
-  onClose: () => void;
-  onNext: () => void;
-  onPrev: () => void;
-}> = ({ isOpen, images, currentIndex, title, onClose, onNext, onPrev }) => {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
+  subtitle: string;
+  description: string;
+  tech: string[];
+  screenshots: string[];
+  videoUrl: string;
+  prominentImage: string;
+  codeSnippet: string;
+}
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowRight') onNext();
-      if (e.key === 'ArrowLeft') onPrev();
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose, onNext, onPrev]);
+interface CompanyProject {
+  title: string;
+  period: string;
+  company: string;
+  logo: string;
+  description: string;
+  tech: string[];
+}
 
-  if (!isOpen) return null;
+interface PersonalProject {
+  title: string;
+  description: string;
+  tech: string[];
+  screenshots?: string[];
+  githubUrl?: string;
+  liveUrl?: string;
+}
 
-  return ReactDOM.createPortal(
-    <div
-      className="fixed top-0 left-0 right-0 bottom-0 bg-black/95 flex items-center justify-center"
-      style={{ zIndex: 99999, position: 'fixed', width: '100vw', height: '100vh' }}
-      onClick={onClose}
-    >
-      {/* Close Button */}
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors p-2"
-        style={{ zIndex: 100000 }}
-        aria-label="Close modal"
-      >
-        <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-        </svg>
-      </button>
-
-      {/* Previous Button */}
-      {images.length > 1 && (
-        <button
-          onClick={(e) => { e.stopPropagation(); onPrev(); }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors p-2"
-          style={{ zIndex: 100000 }}
-          aria-label="Previous image"
-        >
-          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-      )}
-
-      {/* Image Container */}
-      <div
-        className="flex flex-col items-center justify-center px-16 py-8"
-        onClick={(e) => e.stopPropagation()}
-        style={{ maxWidth: '90vw', maxHeight: '90vh' }}
-      >
-        <img
-          src={images[currentIndex]}
-          alt={`${title} screenshot ${currentIndex + 1}`}
-          style={{ maxHeight: 'calc(100vh - 120px)', maxWidth: 'calc(100vw - 140px)', objectFit: 'contain' }}
-          className="rounded-lg"
-        />
-        <p className="text-slate-400 mt-4 font-mono text-sm">
-          {currentIndex + 1} / {images.length}
-        </p>
-      </div>
-
-      {/* Next Button */}
-      {images.length > 1 && (
-        <button
-          onClick={(e) => { e.stopPropagation(); onNext(); }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white transition-colors p-2"
-          style={{ zIndex: 100000 }}
-          aria-label="Next image"
-        >
-          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      )}
-    </div>,
-    document.body
-  );
-};
-
-// Company projects (work)
-const companyProjects: ProjectType[] = [
-  {
-    title: 'Amazon Luna',
-    company: 'Amazon',
-    period: 'Feb 2022 - Present',
-    logo: '/amazon.svg',
-    description:
-      'Amazon Luna is a cloud gaming platform available on Windows, Mac, Amazon Fire TV, iOS and Android. The platform is powered by AWS and integrates with Twitch. Responsibilities include automation and QA testing across devices and ensuring platform compatibility.',
-    tech: ['Selenium Testing', 'Automation', 'Regression Testing', 'Cypress', 'Python', 'QA Automation'],
-  },
-  {
-    title: 'Parity (Fire Tablet Parity Program)',
-    company: 'Amazon',
-    period: 'Dec 2022 - Dec 2023',
-    logo: '/amazon.svg',
-    description:
-      'Verified feature parity between Amazon Appstore apps and their counterparts on Google Play / Apple App Store. Used Agile methodology and Jira to manage test assignments and report discrepancies.',
-    tech: ['Agile Methodologies', 'Agile Testing', 'Jira', 'Performance Testing'],
-  },
-];
-
-// Featured project
-const featuredProject = {
+/* ───────────────────────── Data ───────────────────────── */
+const featuredProject: FeaturedProject = {
   title: 'IRA AI',
+  subtitle: 'Autonomous Intelligence System [Closed Source]',
   description:
-    '**[Proprietary/Closed Source]** An advanced, autonomous Artificial Intelligence system engineered in **Python**, serving as a central nervous system for personal automation and data synthesis. \n\n**Core Architecture:**\nBuilt on a **Hybrid Intelligence Model**, utilizing **Hugging Face Transformers** (PyTorch) for local, low-latency NLU and intent classification, seamlessly cascading to **OpenAI GPT-4** or **Anthropic Claude 3.5** for complex reasoning tasks. The system exposes a high-performance API via **FastAPI** and **Uvicorn**, communicating with a React-based frontend over **WebSockets** for real-time streaming.\n\n**Data & Memory:**\nImplements a multi-tiered storage architecture:\n- **DuckDB**: For high-performance vector embeddings and analytical queries.\n- **SQLite (SQLAlchemy)**: For structured transactional data and conversation history.\n- **LMDB**: For lightning-fast key-value caching of context.\n\n**Voice & Sensory:**\nFeatures a sophisticated voice pipeline using **PvPorcupine** for high-accuracy wake-word detection, **SpeechRecognition** for STT, and **pyttsx3** for offline synthesis. The system includes a custom **Spacy** NLP pipeline for entity extraction and **Sentence-Transformers** for semantic memory retrieval.',
-  tech: ['Python', 'PyTorch', 'Transformers', 'FastAPI', 'DuckDB', 'SQLite', 'WebSockets', 'Porcupine', 'Spacy'],
+    'An advanced AI system in Python using FastAPI, PyTorch/Transformers, DuckDB vectors, SQLite, LMDB caching, WebSockets streaming. Voice pipeline with PvPorcupine wake-word, SpeechRecognition STT, pyttsx3 TTS. Custom Spacy NLP pipeline and Sentence-Transformers for semantic memory retrieval.',
+  tech: [
+    'Python',
+    'PyTorch',
+    'Transformers',
+    'FastAPI',
+    'DuckDB',
+    'SQLite',
+    'WebSockets',
+    'Porcupine',
+    'Spacy',
+  ],
   screenshots: [
     '/ira-ai/dashboard_1.png',
     '/ira-ai/dashboard_2.png',
@@ -143,53 +60,66 @@ const featuredProject = {
   ],
   videoUrl: '/ira-ai/demo.mp4',
   prominentImage: '/ira-ai/dashboard_3.png',
-  codeSnippet: `# IRA AI - Core System Architecture
-class IraAI:
+  codeSnippet: `class IraAI:
     def __init__(self, model_name="facebook/blenderbot-1B-distill"):
-        # Core Components
         self.conversation_manager = ConversationManager(max_context_messages=2)
-        self.db = DatabaseManager()  # SQLite-based persistence
+        self.db = DatabaseManager()
         self.rule_based_responder = RuleBasedResponder()
         self.prompt_formatter = PromptFormatter()
-        
-        # AI Engine with Fallback Chain
         self.model_loader = ModelLoader()
-        self.device = self._detect_device()  # CPU-optimized
-        
-        # Personality & Security
+        self.device = self._detect_device()
         self.personality = {
             "name": "IRA",
-            "traits": ["intelligent", "helpful", "mysterious", "powerful"],
+            "traits": ["intelligent", "helpful", "mysterious"],
             "speaking_style": "confident and knowledgeable"
         }
-        self._load_security_settings()  # Content filtering, rate limiting
-        
+
     def generate_response(self, user_input: str) -> str:
-        """Generate AI response with multi-layer fallback"""
-        # Security filters
         user_input = self._apply_security_filters(user_input)
-        
-        # Conversation context
         context = self.conversation_manager.get_context()
-        
-        # Generate with transformer model
         response = self.generator(
             self.prompt_formatter.format(user_input, context),
-            max_new_tokens=200,
-            temperature=0.8,
-            top_p=0.85
+            max_new_tokens=200, temperature=0.8, top_p=0.85
         )
-        
         return response`,
-} as ProjectType;
+};
 
-// Personal / OSS projects
-const personalProjects: ProjectType[] = [
+const companyProjects: CompanyProject[] = [
   {
-    title: 'Image Downloader Chrome Extension',
+    title: 'Lumen — AI-Powered Voice Assistant',
+    period: 'Sep 2025 – Present',
+    company: 'Amazon (Luna TechOps)',
+    logo: '/amazon.svg',
     description:
-      'A sophisticated Chrome extension engineered with **JavaScript ES6+** and **Chrome Extension Manifest V3** APIs for efficient bulk image downloading from web pages. \n\n**Core Features:**\n• **Smart Image Detection**: Automatically scans DOM for images using `document.querySelectorAll()` with intelligent filtering based on dimensions, file size, and format validation\n• **Bulk Selection Interface**: Interactive checkbox system for multi-image selection with "Select All" and category-based filtering options\n• **Advanced Download Management**: Utilizes Chrome Downloads API with custom filename templating, supporting variables like `{domain}`, `{timestamp}`, `{index}`, and `{original-name}`\n• **Organized Storage**: Automatic folder creation by website domain and date, with user-configurable directory structures\n• **Format Support**: Handles JPG, PNG, GIF, WebP, SVG, and AVIF formats with automatic format detection and conversion options\n• **Preview System**: In-extension image preview with zoom functionality and metadata display (dimensions, file size, format)\n• **Performance Optimization**: Implements lazy loading for large image sets and background processing to prevent UI blocking\n\n**Technical Architecture:**\nBuilt using Chrome Extension Manifest V3 with service workers for background processing, content scripts for DOM manipulation, and popup UI for user interaction. Implements secure cross-origin resource sharing (CORS) handling and respects website robots.txt policies.',
-    tech: ['JavaScript', 'Chrome Extension API', 'HTML5', 'CSS3', 'Chrome Storage API', 'Downloads API', 'Tabs API'],
+      'A native macOS dictation & AI voice command tool built in Swift with zero external dependencies. Transcribes speech via Whisper Large V3 (SageMaker real-time inference) and processes text via Amazon Bedrock (Claude) using custom AWS Signature V4 authentication, Accessibility API injection, and Voice Activity Detection (VAD).',
+    tech: ['Swift', 'SwiftUI', 'macOS 13+', 'AWS SigV4', 'Amazon SageMaker', 'Amazon Bedrock', 'AVFoundation', 'Accessibility APIs'],
+  },
+  {
+    title: 'StepWise — SOP Documentation Tool',
+    period: 'Dec 2024 – Sep 2025',
+    company: 'Amazon (Luna TechOps)',
+    logo: '/amazon.svg',
+    description:
+      'A full-stack Chrome extension recording browser interactions to generate structured SOPs. Features contextual screenshot capture with element highlighting, a Word-like ribbon editor, Node.js/Express AI integration (Bedrock), and a custom secure SSH-authenticated auto-update engine.',
+    tech: ['TypeScript', 'Chrome APIs', 'Node.js', 'Express', 'AWS Bedrock', 'Vitest', 'Terraform', 'Kubernetes'],
+  },
+  {
+    title: 'Amazon Luna (TechOps & Infrastructure)',
+    period: 'Feb 2022 – Present',
+    company: 'Amazon (Luna TechOps)',
+    logo: '/amazon.svg',
+    description:
+      'Manage the operational backbone and streaming infrastructure of the Amazon Luna cloud gaming platform. Spearhead Fortnite maintenance releases (MCM), triage automated streaming quality alarm tickets via SIM and QuickSight, provision SIPS region onboardings, and own SEV-2/3 on-call incident response under strict SLAs.',
+    tech: ['AWS (S3/EC2/EKS)', 'QuickSight', 'SIM & Jira', 'SIPS Onboarding', 'Fortnite Releases', 'SLA Ownership'],
+  },
+];
+
+const personalProjects: PersonalProject[] = [
+  {
+    title: 'Chrome Image Downloader Extension',
+    description:
+      'Chrome MV3 extension for bulk image downloading with smart detection, selection interface, and download management. Scans DOM for high-res assets, provides a visual selection grid, and packages downloads via the Chrome Downloads API.',
+    tech: ['JavaScript', 'Chrome Extension API', 'HTML5', 'CSS3', 'Downloads API'],
     screenshots: [
       '/chrome-extension/chrome-ext-1.png',
       '/chrome-extension/chrome-ext-2.png',
@@ -199,8 +129,8 @@ const personalProjects: ProjectType[] = [
   {
     title: 'Bharat Wallet',
     description:
-      '**[Not Production Ready]** A comprehensive digital wallet application built entirely in **Dart** using the **Flutter framework**. Implements secure local-first architecture with encrypted storage using flutter_secure_storage, Firebase Authentication for user management, and Firestore for metadata synchronization. Features include biometric authentication (fingerprint/face ID) via local_auth, NFC card reading preparation with flutter_nfc_kit, OAuth 2.0 integration for Gmail import using flutter_appauth, real-time location services with geolocator, and Firebase Cloud Messaging for push notifications. State management handled through Riverpod for scalable reactive architecture. Designed with a focus on privacy—sensitive data never leaves the device, only metadata syncs to cloud.',
-    tech: ['Dart', 'Flutter', 'Riverpod', 'Firebase Auth', 'Firestore', 'flutter_secure_storage', 'Biometrics', 'NFC', 'OAuth 2.0', 'FCM'],
+      'Flutter/Dart digital wallet with secure storage, Firebase Auth, biometric authentication, NFC payments, OAuth 2.0 flows, and Riverpod state management. Local-first architecture with encrypted on-device data.',
+    tech: ['Dart', 'Flutter', 'Riverpod', 'Firebase', 'Biometrics', 'NFC', 'OAuth 2.0'],
     githubUrl: 'https://github.com/h3x-levi/Wallet',
     screenshots: [
       '/bharat-wallet/shot_overview.png',
@@ -214,355 +144,363 @@ const personalProjects: ProjectType[] = [
   {
     title: 'Portfolio Website',
     description:
-      'A modern, responsive portfolio website built with **React 19.2.0** and **TypeScript** to showcase professional experience, projects, and skills. Developed using **Vite 6.2.0** as the build tool for lightning-fast development and optimized production builds. Features include a custom dark theme with teal accents using **Tailwind CSS 4**, smooth scroll animations, typing animations in the hero section, and a fully responsive design across all devices. Implements component-based architecture with reusable UI components, TypeScript interfaces for type safety, and React Hooks for state management. Deployed on **Vercel** with automatic CI/CD from GitHub. Custom typography using IBM Plex Mono font for a technical, engineering-focused aesthetic.',
-    tech: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'React Hooks', 'Vercel', 'GitHub Actions'],
+      'This portfolio built with React 19, TypeScript, Vite, and Tailwind CSS. Fully responsive, accessible, and performance-optimized with animated sections and interactive project showcases.',
+    tech: ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
     githubUrl: 'https://github.com/h3x-levi/portfolio',
-    liveUrl: window.location.origin,
-    codeSnippet: `// Hero Component with Typing Animation
-const Hero: React.FC = ({ setActivePage }) => {
-  const [typedTitle, setTypedTitle] = useState('');
-  const fullTitle = 'DevOps Engineer | Automation';
-  
-  useEffect(() => {
-    const typingInterval = setInterval(() => {
-      setTypedTitle((prev) => {
-        if (prev.length < fullTitle.length) {
-          return fullTitle.substring(0, prev.length + 1);
-        }
-        clearInterval(typingInterval);
-        return prev;
-      });
-    }, 120);
-    return () => clearInterval(typingInterval);
-  }, []);
-  
-  return <h2>{typedTitle}</h2>;
-};`,
+    liveUrl: typeof window !== 'undefined' ? window.location.origin : '/',
   },
 ];
 
-const FeaturedProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+/* ───────────────── Image Modal (Portal) ───────────────── */
+interface ImageModalProps {
+  images: string[];
+  currentIndex: number;
+  onClose: () => void;
+  onPrev: () => void;
+  onNext: () => void;
+}
 
-  const openModal = (index: number) => setSelectedImage(index);
-  const closeModal = () => setSelectedImage(null);
-  const nextImage = () => {
-    if (selectedImage !== null && project.screenshots) {
-      setSelectedImage((selectedImage + 1) % project.screenshots.length);
-    }
-  };
-  const prevImage = () => {
-    if (selectedImage !== null && project.screenshots) {
-      setSelectedImage((selectedImage - 1 + project.screenshots.length) % project.screenshots.length);
-    }
-  };
+const ImageModal: React.FC<ImageModalProps> = ({ images, currentIndex, onClose, onPrev, onNext }) => {
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
 
-  return (
-    <>
-      <div className="bg-[#112240] rounded-lg shadow-lg p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-teal-500/10 mb-8">
-        <div className="flex justify-between items-start mb-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-12 h-12 text-teal-300">
-              <Icons.Award size="100%" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-slate-100">{project.title}</h3>
-              <span className="text-sm text-teal-300 font-mono">Featured Project</span>
-            </div>
-          </div>
-        </div>
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowLeft') onPrev();
+      if (e.key === 'ArrowRight') onNext();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onClose, onPrev, onNext]);
 
-        {project.prominentImage ? (
-          /* Layout with Prominent Image */
-          <div className="mb-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-              {/* Video */}
-              {project.videoUrl && (
-                <div className="h-full">
-                  <video
-                    controls
-                    className="w-full h-full object-cover rounded-lg border border-slate-700 shadow-lg"
-                    poster={project.screenshots?.[0]}
-                  >
-                    <source src={project.videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              )}
+  return ReactDOM.createPortal(
+    <div
+      className="fixed inset-0 flex items-center justify-center animate-modalOverlay"
+      style={{ zIndex: 99999 }}
+      onClick={onClose}
+    >
+      {/* Overlay */}
+      <div className="absolute inset-0 bg-black/90" />
 
-              {/* Prominent Image */}
-              <div
-                className="h-full rounded-lg border border-slate-700 overflow-hidden shadow-lg cursor-pointer group relative"
-                onClick={() => {
-                  const idx = project.screenshots?.findIndex(s => s === project.prominentImage);
-                  if (idx !== undefined && idx >= 0) openModal(idx);
-                }}
-              >
-                <div className="absolute inset-0 bg-teal-500/0 group-hover:bg-teal-500/10 transition-colors duration-300 z-10 flex items-center justify-center">
-                  <div className="text-teal-300 opacity-0 group-hover:opacity-100 transform scale-75 group-hover:scale-100 transition-all duration-300">
-                    <Icons.Maximize size={48} />
-                  </div>
-                </div>
-                <img
-                  src={project.prominentImage}
-                  alt={`${project.title} prominent view`}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-            </div>
+      {/* Close button */}
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute top-5 right-5 text-white/70 hover:text-white text-3xl font-light z-10 w-10 h-10 flex items-center justify-center rounded-full hover:bg-white/10 transition-[color,background-color,transform] duration-200 active:scale-90"
+        aria-label="Close"
+      >
+        ✕
+      </button>
 
-            {/* Thumbnails */}
-            {project.screenshots && project.screenshots.length > 0 && (
-              <div className="overflow-x-auto mb-8">
-                <div className="flex gap-2 pb-2">
-                  {project.screenshots.map((screenshot, idx) => (
-                    <div
-                      key={idx}
-                      className={`flex-shrink-0 w-32 h-24 rounded-lg overflow-hidden border transition-all cursor-pointer ${screenshot === project.prominentImage
-                        ? 'border-teal-500 ring-2 ring-teal-500/20'
-                        : 'border-slate-700 hover:border-teal-300/50'
-                        }`}
-                      onClick={() => openModal(idx)}
-                    >
-                      <img
-                        src={screenshot}
-                        alt={`${project.title} screenshot ${idx + 1}`}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+      {/* Prev Arrow */}
+      {images.length > 1 && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onPrev();
+          }}
+          className="absolute left-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-4xl z-10 w-12 h-12 flex items-center justify-center rounded-full hover:bg-white/10 transition-[color,background-color,transform] duration-200 active:scale-90"
+          aria-label="Previous image"
+        >
+          ‹
+        </button>
+      )}
 
-            {/* Description & Tech */}
-            <div>
-              <p className="text-slate-200 mb-6 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: project.description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }}></p>
+      {/* Next Arrow */}
+      {images.length > 1 && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onNext();
+          }}
+          className="absolute right-4 top-1/2 -translate-y-1/2 text-white/60 hover:text-white text-4xl z-10 w-12 h-12 flex items-center justify-center rounded-full hover:bg-white/10 transition-[color,background-color,transform] duration-200 active:scale-90"
+          aria-label="Next image"
+        >
+          ›
+        </button>
+      )}
 
-              <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-300">
-                {project.tech.map((t) => (
-                  <span key={t} className="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/50">{t}</span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ) : (
-          /* Standard Layout */
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-            {/* Left: Video & Screenshots */}
-            <div>
-              {project.videoUrl && (
-                <div className="mb-4">
-                  <video
-                    controls
-                    className="w-full rounded-lg border border-slate-700 shadow-lg"
-                    poster={project.screenshots?.[0]}
-                  >
-                    <source src={project.videoUrl} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                </div>
-              )}
-
-              {project.screenshots && project.screenshots.length > 0 && (
-                <div className="overflow-x-auto">
-                  <div className="flex gap-2 pb-2">
-                    {project.screenshots.map((screenshot, idx) => (
-                      <div
-                        key={idx}
-                        className="flex-shrink-0 w-32 h-24 rounded-lg overflow-hidden border border-slate-700 hover:border-teal-300/50 transition-colors cursor-pointer"
-                        onClick={() => openModal(idx)}
-                      >
-                        <img
-                          src={screenshot}
-                          alt={`${project.title} screenshot ${idx + 1}`}
-                          className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Right: Description */}
-            <div className="flex flex-col justify-between">
-              <div>
-                <p className="text-slate-200 mb-6 text-sm leading-relaxed" dangerouslySetInnerHTML={{ __html: project.description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>') }}></p>
-
-                <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-300 mb-6">
-                  {project.tech.map((t) => (
-                    <span key={t} className="bg-slate-800/50 px-2 py-1 rounded border border-slate-700/50">{t}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Code Snippet - Full Width */}
-        {project.codeSnippet && (
-          <div className="mt-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-mono text-teal-300">System Architecture</span>
-              <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-500/20 border border-red-500/50"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/20 border border-yellow-500/50"></div>
-                <div className="w-2.5 h-2.5 rounded-full bg-green-500/20 border border-green-500/50"></div>
-              </div>
-            </div>
-            <div className="bg-[#0a192f] border border-slate-700 rounded-lg p-4 overflow-x-auto shadow-inner">
-              <pre className="text-xs text-slate-300 font-mono leading-relaxed">
-                <code>{project.codeSnippet}</code>
-              </pre>
-            </div>
-          </div>
+      {/* Image */}
+      <div
+        className="relative z-10 max-w-[90vw] max-h-[85vh] flex flex-col items-center animate-modalContent"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          key={currentIndex}
+          src={images[currentIndex]}
+          alt={`Screenshot ${currentIndex + 1} of ${images.length}`}
+          className="max-w-full max-h-[80vh] object-contain rounded-lg shadow-2xl animate-imageFade"
+        />
+        {/* Counter */}
+        {images.length > 1 && (
+          <span className="mt-4 text-white/60 text-sm font-sans">
+            {currentIndex + 1} / {images.length}
+          </span>
         )}
       </div>
-
-      {/* Image Modal */}
-      {project.screenshots && (
-        <ImageModal
-          isOpen={selectedImage !== null}
-          images={project.screenshots}
-          currentIndex={selectedImage ?? 0}
-          title={project.title}
-          onClose={closeModal}
-          onNext={nextImage}
-          onPrev={prevImage}
-        />
-      )}
-    </>
+    </div>,
+    document.body,
   );
 };
 
-const ProjectCard: React.FC<{ project: ProjectType }> = ({ project }) => {
-  const [selectedImage, setSelectedImage] = useState<number | null>(null);
+/* ───────────── Thumbnail Gallery Row ───────────── */
+interface ThumbnailGalleryProps {
+  images: string[];
+  onImageClick: (index: number) => void;
+}
 
-  const openModal = (index: number) => setSelectedImage(index);
-  const closeModal = () => setSelectedImage(null);
-  const nextImage = () => {
-    if (selectedImage !== null && project.screenshots) {
-      setSelectedImage((selectedImage + 1) % project.screenshots.length);
-    }
+const ThumbnailGallery: React.FC<ThumbnailGalleryProps> = ({ images, onImageClick }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  return (
+    <div className="relative group/gallery">
+      <div
+        ref={scrollRef}
+        className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-stone-300 dark:scrollbar-thumb-stone-700 scrollbar-track-transparent"
+        style={{ scrollbarWidth: 'thin' }}
+      >
+        {images.map((src, idx) => (
+          <button
+            key={src}
+            onClick={() => onImageClick(idx)}
+            className="flex-shrink-0 rounded-lg overflow-hidden border-2 border-stone-200 dark:border-stone-800 hover:border-orange-400 dark:hover:border-orange-500 transition-[border-color,box-shadow,transform] duration-200 hover:shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-orange-400 dark:focus:ring-orange-500 focus:ring-offset-2"
+          >
+            <img
+              src={src}
+              alt={`Screenshot ${idx + 1}`}
+              className="h-20 w-32 object-cover"
+              loading="lazy"
+            />
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ───────────── Tech Tag Component ───────────── */
+const TechTag: React.FC<{ label: string }> = ({ label }) => (
+  <span className="inline-block bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50 font-mono text-xs px-2.5 py-1 rounded-md">
+    {label}
+  </span>
+);
+
+/* ───────────────── Main Component ───────────────── */
+const Projects: React.FC = () => {
+  /* Modal state */
+  const [modalImages, setModalImages] = useState<string[] | null>(null);
+  const [modalIndex, setModalIndex] = useState(0);
+
+  const openModal = (images: string[], index: number) => {
+    setModalImages(images);
+    setModalIndex(index);
   };
+
+  const closeModal = () => {
+    setModalImages(null);
+    setModalIndex(0);
+  };
+
   const prevImage = () => {
-    if (selectedImage !== null && project.screenshots) {
-      setSelectedImage((selectedImage - 1 + project.screenshots.length) % project.screenshots.length);
-    }
+    if (!modalImages) return;
+    setModalIndex((i) => (i === 0 ? modalImages.length - 1 : i - 1));
+  };
+
+  const nextImage = () => {
+    if (!modalImages) return;
+    setModalIndex((i) => (i === modalImages.length - 1 ? 0 : i + 1));
   };
 
   return (
-    <>
-      <div className="bg-[#112240] rounded-lg shadow-lg p-6 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-teal-500/10 h-full flex flex-col">
-        <div className="flex-grow">
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center space-x-3">
-              {project.logo ? (
-                <img src={project.logo} alt={project.company || project.title} className="w-10 h-10 object-contain" />
-              ) : (
-                <div className="w-10 h-10 text-teal-300">
-                  <Icons.Award size="100%" />
-                </div>
-              )}
-              {project.company && <span className="text-sm text-slate-300 font-mono">{project.company}</span>}
-            </div>
-            <div className="flex items-center space-x-4">
-              {project.githubUrl && (
-                <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-teal-300 transition-colors">
-                  <Icons.GitHub size={24} />
-                </a>
-              )}
-              {project.liveUrl && (
-                <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="text-slate-300 hover:text-teal-300 transition-colors">
-                  <Icons.ExternalLink size={24} />
-                </a>
-              )}
-            </div>
-          </div>
-          <h3 className="text-xl font-bold text-slate-100 mb-2 group-hover:text-teal-300">{project.title}</h3>
-          {project.period && <p className="text-xs text-slate-300 font-mono mb-2">{project.period}</p>}
-          <p className="text-slate-200 mb-4 text-sm" dangerouslySetInnerHTML={{ __html: project.description.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }}></p>
+    <AnimatedSection id="projects" className="py-24 px-4 sm:px-6 lg:px-8 max-w-6xl mx-auto">
+      {/* Section heading */}
+      <h2 className="text-3xl sm:text-4xl font-extrabold text-stone-900 dark:text-stone-100 font-sans mb-14">
+        <span className="text-orange-600 dark:text-orange-500 mr-2">03.</span>Projects
+      </h2>
 
-          {/* Screenshot Gallery */}
-          {project.screenshots && project.screenshots.length > 0 && (
-            <div className="overflow-x-auto">
-              <div className="flex gap-2 pb-2">
-                {project.screenshots.map((screenshot, idx) => (
-                  <div
-                    key={idx}
-                    className={`flex-shrink-0 ${project.title.includes('Chrome Extension') ? 'w-48 h-32' : 'w-32 h-64'} rounded-lg overflow-hidden border border-slate-700 hover:border-teal-300/50 transition-colors cursor-pointer`}
-                    onClick={() => openModal(idx)}
-                  >
-                    <img
-                      src={screenshot}
-                      alt={`${project.title} screenshot ${idx + 1}`}
-                      className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
+      {/* ============ COMPANY PROJECTS ============ */}
+      <div className="mb-14">
+        <h3 className="text-xl font-bold text-stone-900 dark:text-stone-100 font-sans mb-6">Company Projects</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {companyProjects.map((proj) => (
+            <div
+              key={proj.title}
+              className="bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <img
+                  src={proj.logo}
+                  alt={`${proj.company} logo`}
+                  className="w-10 h-10 object-contain dark:brightness-90"
+                />
+                <div>
+                  <p className="text-stone-500 dark:text-stone-400 text-xs font-sans">{proj.company}</p>
+                  <h4 className="text-stone-900 dark:text-stone-100 font-bold text-lg font-sans leading-tight">
+                    {proj.title}
+                  </h4>
+                </div>
+              </div>
+              <p className="text-stone-500 dark:text-stone-400 text-xs font-mono mb-3">{proj.period}</p>
+              <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed mb-4">{proj.description}</p>
+              <div className="flex flex-wrap gap-2">
+                {proj.tech.map((t) => (
+                  <TechTag key={t} label={t} />
                 ))}
               </div>
             </div>
-          )}
-
-          {/* Code Snippet */}
-          {project.codeSnippet && (
-            <div>
-              <div className="bg-slate-900/50 border border-slate-700 rounded-lg p-4 overflow-x-auto">
-                <pre className="text-xs text-slate-300 font-mono leading-relaxed">
-                  <code>{project.codeSnippet}</code>
-                </pre>
-              </div>
-            </div>
-          )}
-        </div>
-        <div className="flex flex-wrap gap-2 font-mono text-xs text-slate-300 mt-4">
-          {project.tech.map((t) => (
-            <span key={t} className="bg-teal-500/10 text-teal-300 px-2 py-1 rounded border border-teal-500/30">{t}</span>
           ))}
         </div>
       </div>
 
-      {/* Image Modal */}
-      {project.screenshots && (
+      {/* ============ FEATURED: IRA AI ============ */}
+      <div className="bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-sm overflow-hidden mb-14">
+        {/* Header */}
+        <div className="p-6 sm:p-8 pb-0">
+          <div className="flex items-start justify-between mb-1">
+            <div>
+              <h3 className="text-2xl font-extrabold text-stone-900 dark:text-stone-100 font-sans">
+                {featuredProject.title}
+              </h3>
+              <p className="text-stone-500 dark:text-stone-400 text-sm mt-1 font-mono">{featuredProject.subtitle}</p>
+            </div>
+            <span className="bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50 rounded-full font-mono text-[10px] px-3 py-1 uppercase tracking-wider whitespace-nowrap">
+              Featured Personal Project
+            </span>
+          </div>
+        </div>
+
+        {/* Video Player */}
+        <div className="px-6 sm:px-8 pt-6">
+          <div className="rounded-xl overflow-hidden border border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-stone-950">
+            <video
+              className="w-full aspect-video object-cover"
+              controls
+              poster="/ira-ai/dashboard_1.png"
+              preload="metadata"
+            >
+              <source src={featuredProject.videoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        {/* Screenshot Thumbnails */}
+        <div className="px-6 sm:px-8 pt-5">
+          <ThumbnailGallery
+            images={featuredProject.screenshots}
+            onImageClick={(idx) => openModal(featuredProject.screenshots, idx)}
+          />
+        </div>
+
+        {/* Description & Tech */}
+        <div className="px-6 sm:px-8 pt-6">
+          <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed">{featuredProject.description}</p>
+          <div className="flex flex-wrap gap-2 mt-4">
+            {featuredProject.tech.map((t) => (
+              <TechTag key={t} label={t} />
+            ))}
+          </div>
+        </div>
+
+        {/* Code Snippet */}
+        <div className="px-6 sm:px-8 py-6">
+          <div className="bg-stone-100 dark:bg-stone-950 rounded-xl overflow-hidden border border-stone-200 dark:border-stone-900">
+            {/* Code header bar */}
+            <div className="flex items-center gap-2 px-4 py-3 border-b border-stone-200 dark:border-stone-900">
+              <span className="w-3 h-3 rounded-full bg-red-400" />
+              <span className="w-3 h-3 rounded-full bg-yellow-400" />
+              <span className="w-3 h-3 rounded-full bg-green-400" />
+              <span className="ml-3 text-stone-500 dark:text-stone-400 text-xs font-mono">ira_core.py</span>
+            </div>
+            {/* Code body */}
+            <pre className="p-6 overflow-x-auto text-[13px] leading-relaxed">
+              <code className="font-mono text-stone-800 dark:text-stone-200 whitespace-pre">
+                {featuredProject.codeSnippet}
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      {/* ============ PERSONAL PROJECTS ============ */}
+      <div>
+        <h3 className="text-xl font-bold text-stone-900 dark:text-stone-100 font-sans mb-6">Personal Projects</h3>
+        <div className="space-y-6">
+          {personalProjects.map((proj) => (
+            <div
+              key={proj.title}
+              className="bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-md transition-shadow duration-300"
+            >
+              {/* Title row */}
+              <div className="flex items-start justify-between gap-4 mb-3">
+                <h4 className="text-stone-900 dark:text-stone-100 font-bold text-lg font-sans">{proj.title}</h4>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  {proj.githubUrl && (
+                    <a
+                      href={proj.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-stone-400 dark:text-stone-500 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                      aria-label={`GitHub repository for ${proj.title}`}
+                    >
+                      <Icons.GitHub className="w-5 h-5" />
+                    </a>
+                  )}
+                  {proj.liveUrl && (
+                    <a
+                      href={proj.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-stone-400 dark:text-stone-500 hover:text-orange-600 dark:hover:text-orange-400 transition-colors"
+                      aria-label={`Live site for ${proj.title}`}
+                    >
+                      <Icons.ExternalLink className="w-5 h-5" />
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              <p className="text-stone-600 dark:text-stone-300 text-sm leading-relaxed mb-4">{proj.description}</p>
+
+              {/* Screenshot gallery (if any) */}
+              {proj.screenshots && proj.screenshots.length > 0 && (
+                <div className="mb-4">
+                  <ThumbnailGallery
+                    images={proj.screenshots}
+                    onImageClick={(idx) => openModal(proj.screenshots!, idx)}
+                  />
+                </div>
+              )}
+
+              {/* Tech tags */}
+              <div className="flex flex-wrap gap-2">
+                {proj.tech.map((t) => (
+                  <TechTag key={t} label={t} />
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ============ FULLSCREEN IMAGE MODAL ============ */}
+      {modalImages && (
         <ImageModal
-          isOpen={selectedImage !== null}
-          images={project.screenshots}
-          currentIndex={selectedImage ?? 0}
-          title={project.title}
+          images={modalImages}
+          currentIndex={modalIndex}
           onClose={closeModal}
-          onNext={nextImage}
           onPrev={prevImage}
+          onNext={nextImage}
         />
       )}
-    </>
-  );
-};
-
-const Projects: React.FC = () => {
-  return (
-    <AnimatedSection id="projects">
-      <h2 className="text-3xl font-bold text-slate-100 mb-8 relative inline-block">
-        <span className="text-teal-300">03.</span> Projects
-        <span className="absolute bottom-[-10px] left-0 w-24 h-1 bg-teal-300/50"></span>
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-        {companyProjects.map((project, index) => (
-          <ProjectCard key={index} project={project} />
-        ))}
-      </div>
-
-      <h3 className="text-teal-300 font-mono mb-6">Personal Projects</h3>
-
-      {/* Featured Project - Full Width */}
-      <FeaturedProjectCard project={featuredProject} />
-
-      {/* Other Personal Projects */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {personalProjects.map((project, index) => (
-          <ProjectCard key={index} project={project} />
-        ))}
-      </div>
     </AnimatedSection>
   );
 };

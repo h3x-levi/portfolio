@@ -4,6 +4,8 @@ import {
   FiMail,
   FiExternalLink,
   FiMaximize,
+  FiSun,
+  FiMoon,
 } from 'react-icons/fi';
 import { FaTwitter, FaInstagram } from 'react-icons/fa';
 import { GoProjectSymlink as FiAward } from "react-icons/go";
@@ -31,4 +33,6 @@ export const Icons = {
   Udemy: SiUdemy,
   Google: SiGoogle,
   Maximize: FiMaximize,
+  Sun: FiSun,
+  Moon: FiMoon,
 };

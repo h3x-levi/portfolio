@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, ReactNode } from 'react';
+import React, { useRef, useEffect, useState, ReactNode } from 'react';
 
 interface AnimatedSectionProps {
   children: ReactNode;
@@ -8,18 +7,33 @@ interface AnimatedSectionProps {
 }
 
 const AnimatedSection: React.FC<AnimatedSectionProps> = ({ children, id, className = '' }) => {
-  const [isMounted, setIsMounted] = useState(false);
+  const ref = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setIsMounted(true), 50);
-    return () => clearTimeout(timeout);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
   }, []);
 
   return (
     <section
+      ref={ref}
       id={id}
-      className={`py-20 md:py-24 transition-all duration-700 ease-out ${className} ${
-        isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+      className={`transition-[opacity,transform] duration-700 ease-out ${className} ${
+        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
       }`}
     >
       {children}

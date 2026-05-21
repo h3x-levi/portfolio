@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -8,38 +7,20 @@ import Projects from './components/Projects';
 import Certifications from './components/Certifications';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-
-type Page = 'home' | 'experience' | 'projects' | 'certifications' | 'contact';
+import FloatingCraftBackground from './components/FloatingCraftBackground';
 
 const App: React.FC = () => {
-  const [activePage, setActivePage] = useState<Page>('home');
-
-  const renderPage = () => {
-    switch (activePage) {
-      case 'experience':
-        return <Experience />;
-      case 'projects':
-        return <Projects />;
-      case 'certifications':
-        return <Certifications />;
-      case 'contact':
-        return <Contact />;
-      case 'home':
-      default:
-        return (
-          <>
-            <Hero setActivePage={setActivePage} />
-            <About />
-          </>
-        );
-    }
-  };
-
   return (
-    <div className="flex flex-col min-h-screen">
-      <Header activePage={activePage} setActivePage={setActivePage} />
-      <main className="flex-grow container mx-auto px-6 md:px-12 lg:px-20 mt-24">
-        {renderPage()}
+    <div className="flex flex-col min-h-screen bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 font-sans relative">
+      <FloatingCraftBackground />
+      <Header />
+      <main className="flex-grow z-10 relative">
+        <Hero />
+        <About />
+        <Experience />
+        <Projects />
+        <Certifications />
+        <Contact />
       </main>
       <Footer />
     </div>

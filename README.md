@@ -1,33 +1,51 @@
-# Akshay Mondal - DevOps Engineer Portfolio
+# Akshay Mondal — Support Engineer (Luna TechOps) Portfolio
 
-A modern, interactive portfolio website showcasing the professional journey, skills, and projects of **Akshay Mondal**, a DevOps Engineer and QA Automation specialist with 5+ years of experience.
+A premium, ultra-responsive, and high-fidelity Ghibli-inspired developer cabin portfolio website. Showcasing the professional journey, core systems, and advanced internal tooling built by **Akshay Mondal**, a **Support Engineer (Luna TechOps)** & DevOps/QA Automation specialist with 5+ years of cloud infrastructure and automation experience.
 
-## 🌟 Features
+---
 
-- **Modern UI**: Built with React, TypeScript, and Tailwind CSS
-- **Responsive Design**: Fully responsive across all devices
-- **IBM Plex Mono Font**: Custom typography throughout
-- **Dark Theme**: Elegant dark mode with teal accents
-- **Animated Sections**: Smooth scroll animations for better UX
-- **Company Projects**: Showcase of work done at Amazon and other organizations
-- **Personal Projects**: Highlight of side projects and learning initiatives
-- **Education Timeline**: Display of academic credentials
-- **Certifications**: Linked credentials from Udemy and Google
-- **Social Links**: Direct connections to GitHub, LinkedIn, Twitter, and Instagram
+## 🎨 Ghibli Drafting Cabin Architecture
+The website operates as an interactive digital drafting board, bringing hand-sketched Ghibli-themed elements to life with organic micro-animations:
+- **Calcifer on the CPU Socket (The Compute Engine)**: Flame breathing, scaling, and swaying motherboard demon. Hovering increases his flames and releases orange rising sparks.
+- **Jiji on the Code Terminal (The QA Monitor)**: Retro CRT monitor displaying automated test runs with a smoothly swaying pendulum tail. Hovering triggers a happy wink and sound wave visualizers.
+- **Susuwatari Soot Sprites (The CI/CD Operators)**: Fuzzy pipeline helpers wiggling, sliding on Git branch lines with code packets, bobbing server clusters, typing on keyboards, or sleeping near the footer.
+- **Kodama Forest Spirits (The Cloud Clusters)**: White spirits rattling their heads periodically atop cloud platforms (`aws_us_east_1`). Hovering triggers a rapid head rattle and musical notes.
 
-## 📋 Sections
+---
 
-1. **Hero** - Eye-catching introduction with typing animation
-2. **About** - Personal bio, skills, projects (Nova AI, Bharat Wallet), and profile photo
-3. **Experience** - Work history with Amazon roles (DevOps Engineer, QA Engineer, Device Associate), plus other companies
-4. **Projects** - Split into Company Projects and Personal Projects
-5. **Certifications** - Professional certifications with credential links
-6. **Contact** - Call-to-action for getting in touch
+## 🌟 Key Features & Engineering Highlights
+
+- **Day & Night Cabin Adaptability**: Smooth, custom manual theme switcher toggling between **Sunny Day Cabin** and **Midnight Dark Cabin** with rotating Sun and tilting Moon micro-interactions.
+- **Zero-FOUC Blocking Head Script**: Prevents layout color flashes on initial mount by evaluating system preferences and local storage in a blocking head script before React mounts.
+- **Hardware-Accelerated Compositor Animations**: Avoids high-frequency main-thread layout reflows by targeting GPU-accelerated compositor properties (`transform`, `opacity`, `background-color`, `border-color`), guaranteeing 60fps/120fps.
+- **Premium Apple-Style Easing Curves**: Tab switches and reveals use premium transition dynamics (`cubic-bezier(0.16, 1, 0.3, 1)` Out-Expo and springy elastic modal reveals `cubic-bezier(0.34, 1.56, 0.64, 1)`).
+- **Advanced Screenshot Gallery Modal**: Responsive overlay portals containing crossfade screenshot transitions, keyboard listener actions (arrows, escape), scroll lock toggles, and click tactile scaling.
+- **Tactile Click Feedback**: Installs physical-feeling click micro-interactions (`active:scale-95`) across all navigation items, tabs, thumbnails, social links, and CTAs.
+
+---
+
+## 💼 Core Roles & Narrative
+Reflecting your direct contributions managing the operational backbone of the Amazon Luna game streaming service:
+1. **Streaming Metric & Ticket Triage**: Triage automated streaming quality alarms via SIM/QuickSight, classifying breaches as `NOISE`, `GENUINE ISSUE`, or `NEEDS REVIEW`.
+2. **Release & Outage Management**: Fortnite maintenance cycles (MCM), scheduled outages, GSE Andon Cord banners, and post-deployment validation.
+3. **Region Onboarding & Game Ingestion**: Provisioning SIPS streaming infrastructure for AWS region expansion and GOG platform game ingestion.
+4. **LabCollab Certifications**: Tracking game certification bugs through various states (Pass, Fail, Pass with Exception) via Jira queues.
+5. **SLA Incident Mitigation**: Fast-paced on-call support for SEV-2, SEV-3, and SEV-4 incidents under strict SLAs, utilizing Tempo CTI and Coral build debuggers.
+
+---
+
+## 🛠️ Company Projects Featured
+High-impact internal software automation products built from scratch:
+- **Lumen — AI-Powered Voice Assistant for macOS**: A native Swift/SwiftUI macOS menu-bar utility with zero external dependencies. Dictates speech via Whisper Large V3 (Amazon SageMaker real-time inference) and Bedrock (Claude) with custom SigV4 direct authentication, Accessibility API injection, and real-time Voice Activity Detection (VAD).
+- **StepWise — Browser Workflow SOP Documentation Tool**: A full-stack Chrome extension (Manifest V3) that captures browser interactions to generate training SOPs. Features contextual element highlighting, a ribbon editor, Node.js/Express Bedrock AI integration, and a custom secure SSH-authenticated auto-update engine.
+- **Amazon Luna TechOps & Infrastructure**: Automated telemetry systems, region onboardings, and Fortnite release validation pipelines.
+
+---
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v16 or higher)
+- Node.js (v18 or higher)
 - npm or yarn
 
 ### Installation
@@ -53,54 +71,16 @@ npm run dev
 http://localhost:3000
 ```
 
+---
+
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 19.2.0, TypeScript, Tailwind CSS 4
-- **Build Tool**: Vite 6.2.0
-- **Icons**: React Icons
-- **State Management**: React Hooks
-- **Styling**: Tailwind CSS utilities with custom animations
+- **Frontend Core**: React 19, TypeScript, Vanilla CSS (compositor animations)
+- **Styling & Theme Engine**: Tailwind CSS 4 with custom theme state injectors
+- **Build Tool**: Vite 6 (builds in ~700ms)
+- **Typography**: Inter (sans-serif) & JetBrains Mono (monospace)
 
-## 📂 Project Structure
-
-```
-├── components/          # React components
-│   ├── Hero.tsx
-│   ├── About.tsx
-│   ├── Experience.tsx
-│   ├── Projects.tsx
-│   ├── Certifications.tsx
-│   ├── Contact.tsx
-│   ├── Footer.tsx
-│   ├── Header.tsx
-│   └── icons.tsx
-├── images/             # SVG logos and assets
-├── public/             # Static files (profile.jpg)
-├── App.tsx             # Main app component
-├── index.tsx           # Entry point
-├── types.ts            # TypeScript interfaces
-├── vite.config.ts      # Vite configuration
-└── tsconfig.json       # TypeScript configuration
-```
-
-## 🎨 Customization
-
-### Update Profile Data
-Edit the respective component files:
-- `components/Hero.tsx` - Hero section content
-- `components/About.tsx` - About section, skills, and education
-- `components/Experience.tsx` - Work experience entries
-- `components/Projects.tsx` - Projects (company and personal)
-- `components/Certifications.tsx` - Certification entries
-- `components/Contact.tsx` - Contact information
-
-### Add Your Profile Image
-Replace `/public/profile.jpg` with your own image (512x512px recommended for best quality).
-
-### Update Email
-Change the email address in:
-- `components/Contact.tsx`
-- `components/Footer.tsx`
+---
 
 ## 📦 Build for Production
 
@@ -108,27 +88,7 @@ Change the email address in:
 npm run build
 ```
 
-This generates an optimized production build in the `dist/` directory.
-
-## 👤 About the Creator
-
-**Akshay Mondal** - DevOps Engineer | QA Automation Specialist
-
-- 5+ years of experience in Python, Selenium, Cypress, and DevOps
-- Strong background in test automation, CI/CD pipelines, and infrastructure as code
-- Passionate about building robust systems and high-quality software
-- Based in Bengaluru, Karnataka, India
-
-### Connect
-- **GitHub**: [@h3x-levi](https://github.com/h3x-levi)
-- **LinkedIn**: [Akshay Mondal](https://www.linkedin.com/in/iakm/)
-- **Twitter**: [@_zenith_am](https://x.com/_zenith_am)
-- **Instagram**: [@_zenith_am](https://www.instagram.com/_zenith_am/)
-- **Email**: [luckymondal70@gmail.com](mailto:luckymondal70@gmail.com)
-
-## 📄 License
-
-This project is open source and available under the MIT License.
+This generates an optimized production build in the `dist/` directory, fully packed with minified, tree-shaken JS/CSS assets and pre-loaded vector modules.
 
 ---
 

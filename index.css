@@ -1,38 +1,358 @@
-/* Global styles for the app */
-/* Use IBM Plex Mono as the project font */
+/* Global styles — Warm Craft Studio theme */
+
 html, body, #root {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 code, kbd, pre, samp {
-  font-family: "IBM Plex Mono", monospace;
+  font-family: "JetBrains Mono", monospace;
 }
 
-/* keep the default text color and smoothing from tailwind utilities */
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Add blur and vignette effect to the background */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(ellipse at center, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
-
+/* Smooth section scroll offset for fixed header */
 html {
-  backdrop-filter: blur(1px);
-  -webkit-backdrop-filter: blur(1px);
+  scroll-padding-top: 80px;
 }
 
-#root {
-  position: relative;
-  z-index: 2;
+/* Custom scrollbar - Modern Standard + WebKit legacy fallback */
+html {
+  --scrollbar-thumb: #D6D3D1;
+  --scrollbar-track: #F5F5F4;
+  --scrollbar-thumb-hover: #A8A29E;
+  
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
 }
+
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--scrollbar-thumb-hover);
+  }
+}
+
+/* Utility animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Organic background element floating (slower and more fluid) */
+@keyframes slowDrift {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(8px, -12px) rotate(1.5deg);
+  }
+  50% {
+    transform: translate(-5px, 15px) rotate(-2deg);
+  }
+  75% {
+    transform: translate(10px, 6px) rotate(1deg);
+  }
+}
+.animate-drift-slow {
+  animation: slowDrift 25s ease-in-out infinite;
+}
+
+/* Calcifer Breathes & Crackles (Compute Engine Warmth) */
+@keyframes calciferWarmth {
+  0%, 100% {
+    transform: scaleY(1) scaleX(1) translateY(0);
+    filter: drop-shadow(0 2px 4px rgba(234, 88, 12, 0.2));
+  }
+  30% {
+    transform: scaleY(1.08) scaleX(0.96) translateY(-2px) rotate(1deg);
+    filter: drop-shadow(0 4px 8px rgba(234, 88, 12, 0.35));
+  }
+  60% {
+    transform: scaleY(0.95) scaleX(1.04) translateY(0) rotate(-1deg);
+  }
+  80% {
+    transform: scaleY(1.03) scaleX(0.98) translateY(-1px);
+  }
+}
+.animate-calcifer {
+  transform-origin: bottom center;
+  animation: calciferWarmth 2.2s ease-in-out infinite;
+}
+
+/* Calcifer Sparks Floating Up */
+@keyframes sparkDrift {
+  0% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.4;
+  }
+  100% {
+    transform: translate(var(--spark-x, -15px), var(--spark-y, -45px)) scale(0.3);
+    opacity: 0;
+  }
+}
+.animate-spark {
+  animation: sparkDrift 3.5s ease-out infinite;
+}
+
+/* Jiji the Cat Tail Sway (Pendulum tail) */
+@keyframes swayTail {
+  0%, 100% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(18deg);
+  }
+}
+.animate-jiji-tail {
+  transform-origin: 10px 2px;
+  animation: swayTail 3.8s ease-in-out infinite;
+}
+
+/* Jiji Purr Waves */
+@keyframes purrPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.35;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+.animate-purr {
+  animation: purrPulse 2.8s ease-out infinite;
+}
+
+/* Soot Sprite Jitter (Fuzzy hand-drawn sketch effect) */
+@keyframes sootJitter {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  20% {
+    transform: translate(-0.7px, 0.5px) scale(1.02);
+  }
+  40% {
+    transform: translate(0.7px, -0.6px) scale(0.98);
+  }
+  60% {
+    transform: translate(-0.5px, -0.4px) scale(1.01);
+  }
+  80% {
+    transform: translate(0.6px, 0.6px) scale(0.99);
+  }
+}
+.animate-soot-jitter {
+  animation: sootJitter 0.25s linear infinite;
+}
+
+/* Soot Sprite Bobbing (Leg and body lift) */
+@keyframes sootBob {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+.animate-soot-bob {
+  animation: sootBob 1.6s ease-in-out infinite;
+}
+
+/* Kodama head rattle (Periodic rapid shaking + pause) */
+@keyframes kodamaRattle {
+  0%, 85%, 100% {
+    transform: rotate(0deg) scale(1);
+  }
+  87% {
+    transform: rotate(-14deg) scale(1.02);
+  }
+  89% {
+    transform: rotate(14deg) scale(0.98);
+  }
+  91% {
+    transform: rotate(-12deg) scale(1.01);
+  }
+  93% {
+    transform: rotate(12deg) scale(0.99);
+  }
+  95% {
+    transform: rotate(-8deg);
+  }
+  97% {
+    transform: rotate(8deg);
+  }
+  99% {
+    transform: rotate(-3deg);
+  }
+}
+.animate-kodama-rattle {
+  transform-origin: 12px 17px;
+  animation: kodamaRattle 5s ease-in-out infinite;
+}
+
+/* Kodama Instant Shake on Hover */
+@keyframes kodamaJolt {
+  0%, 100% { transform: rotate(0deg); }
+  15%, 45%, 75% { transform: rotate(-18deg); }
+  30%, 60%, 90% { transform: rotate(18deg); }
+}
+.animate-kodama-jolt {
+  transform-origin: 12px 17px;
+  animation: kodamaJolt 0.5s ease-in-out;
+}
+
+/* Rising Steam (Coffee Mug) */
+@keyframes riseSteam {
+  0% {
+    transform: translateY(3px) scaleX(0.8) skewX(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.45;
+  }
+  60% {
+    transform: translateY(-8px) scaleX(1.1) skewX(4deg);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(-22px) scaleX(0.7) skewX(-4deg);
+    opacity: 0;
+  }
+}
+.animate-steam {
+  animation: riseSteam 3.2s ease-in-out infinite;
+}
+
+/* LED Blink (Server Racks) */
+@keyframes ledPulse {
+  0%, 100% {
+    opacity: 0.25;
+    filter: drop-shadow(0 0 1px rgba(234, 88, 12, 0));
+  }
+  50% {
+    opacity: 0.95;
+    filter: drop-shadow(0 0 3px var(--led-glow, #EA580C));
+  }
+}
+.animate-led-slow {
+  animation: ledPulse 2.4s ease-in-out infinite;
+}
+.animate-led-fast {
+  animation: ledPulse 0.7s ease-in-out infinite;
+}
+
+/* Git branch pulse pipeline signals */
+@keyframes gitPulse {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+.animate-git-line {
+  stroke-dasharray: 6;
+  animation: gitPulse 2s linear infinite;
+}
+
+/* Ambient Floating Blurred Orbs keyframes */
+@keyframes floatOrb1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(15px, -25px) scale(1.05); }
+  66% { transform: translate(-10px, 20px) scale(0.95); }
+}
+@keyframes floatOrb2 {
+  0%, 100% { transform: translate(0, 0) scale(1.03); }
+  50% { transform: translate(-20px, 30px) scale(0.97); }
+}
+.animate-orb-1 {
+  animation: floatOrb1 28s ease-in-out infinite;
+}
+.animate-orb-2 {
+  animation: floatOrb2 32s ease-in-out infinite;
+}
+
+/* Premium high-performance transition animations */
+@keyframes tabEnter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-tabEnter {
+  animation: tabEnter 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalOverlayEnter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-modalOverlay {
+  animation: modalOverlayEnter 0.2s ease-out forwards;
+}
+
+@keyframes modalContentEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-modalContent {
+  animation: modalContentEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes imageFade {
+  from {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-imageFade {
+  animation: imageFade 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+

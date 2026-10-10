@@ -1,38 +1,49 @@
 import {
-  FiGithub,
-  FiLinkedin,
-  FiMail,
-  FiExternalLink,
-  FiMaximize,
-  FiSun,
-  FiMoon,
-} from 'react-icons/fi';
-import { FaTwitter, FaInstagram } from 'react-icons/fa';
-import { GoProjectSymlink as FiAward } from "react-icons/go";
-import { FaAws } from 'react-icons/fa';
-import { SiUdemy, SiGoogle } from 'react-icons/si';
-
-import {
-  SiKubernetes,
-  SiTerraform,
-  SiDocker,
-} from 'react-icons/si';
+  PiGithubLogo,
+  PiLinkedinLogo,
+  PiXLogo,
+  PiEnvelopeSimple,
+  PiArrowUpRight,
+  PiArrowRight,
+  PiArrowUp,
+  PiPlus,
+  PiX,
+  PiCaretDown,
+  PiCaretLeft,
+  PiCaretRight,
+  PiCopy,
+  PiCheck,
+  PiFootprints,
+  PiWaveform,
+  PiLockSimple,
+  PiBroadcast,
+} from 'react-icons/pi';
 
 export const Icons = {
-  GitHub: FiGithub,
-  LinkedIn: FiLinkedin,
-  Mail: FiMail,
-  Twitter: FaTwitter,
-  Instagram: FaInstagram,
-  ExternalLink: FiExternalLink,
-  Award: FiAward,
-  Kubernetes: SiKubernetes,
-  AWS: FaAws,
-  Terraform: SiTerraform,
-  Docker: SiDocker,
-  Udemy: SiUdemy,
-  Google: SiGoogle,
-  Maximize: FiMaximize,
-  Sun: FiSun,
-  Moon: FiMoon,
+  GitHub: PiGithubLogo,
+  LinkedIn: PiLinkedinLogo,
+  X: PiXLogo,
+  Mail: PiEnvelopeSimple,
+  ExternalLink: PiArrowUpRight,
+  Arrow: PiArrowRight,
+  Up: PiArrowUp,
+  Plus: PiPlus,
+  Close: PiX,
+  Down: PiCaretDown,
+  Prev: PiCaretLeft,
+  Next: PiCaretRight,
+  Copy: PiCopy,
+  Check: PiCheck,
+  Steps: PiFootprints,
+  Wave: PiWaveform,
+  Lock: PiLockSimple,
+  Signal: PiBroadcast,
 };
+
+export const EMAIL = 'luckymondal70@gmail.com';
+
+export const SOCIALS = [
+  { label: 'GitHub', href: 'https://github.com/h3x-levi', Icon: Icons.GitHub },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/iakm/', Icon: Icons.LinkedIn },
+  { label: 'X', href: 'https://x.com/_zenith_am', Icon: Icons.X },
+];

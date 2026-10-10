@@ -1,192 +1,231 @@
-import React, { useState, useEffect } from 'react';
-import { Icons } from './icons';
+import React, { useEffect, useRef, useState } from 'react';
+import { Icons, EMAIL } from './icons';
 
 const navLinks = [
-  { name: 'About', id: 'about' },
+  { name: 'Work', id: 'projects' },
   { name: 'Experience', id: 'experience' },
-  { name: 'Projects', id: 'projects' },
+  { name: 'About', id: 'about' },
   { name: 'Certifications', id: 'certifications' },
-  { name: 'Contact', id: 'contact' },
 ];
 
-const Header: React.FC = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('');
-  const [theme, setTheme] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-    }
-    return 'light';
+const sectionLabels: Record<string, string> = {
+  hero: 'Akshay Mondal',
+  what: 'What I do',
+  projects: 'Work',
+  experience: 'Experience',
+  about: 'About',
+  certifications: 'Certifications',
+  contact: 'Say hello',
+};
+
+const bootAssets = ['/work/olivia/mascot-listen.png', '/work/olivia/mascot-speak.png', '/work/signal/board-overview.webp'];
+
+type Phase = 'hidden' | 'docked';
+type Stage = 'phone' | 'laptop' | 'desktop' | 'enter' | 'gone';
+
+const stageLabel: Record<string, string> = { phone: 'Mobile', laptop: 'macOS', desktop: 'Web', enter: 'Web' };
+
+const loadImage = (src: string) =>
+  new Promise<void>((resolve) => {
+    const img = new Image();
+    img.onload = img.onerror = () => resolve();
+    img.src = src;
   });
 
+const Wave: React.FC = () => (
+  <span className="wave" aria-hidden="true">
+    <i /><i /><i /><i /><i />
+  </span>
+);
+
+const SEEN_KEY = 'am-booted';
+
+const seenThisSession = () => {
+  try {
+    return sessionStorage.getItem(SEEN_KEY) === '1';
+  } catch {
+    return false;
+  }
+};
+
+const Boot: React.FC<{ stage: Stage; progress: number }> = ({ stage, progress }) => (
+  <div
+    className="boot"
+    data-stage={stage}
+    role="progressbar"
+    aria-label="Loading the portfolio"
+    aria-valuemin={0}
+    aria-valuemax={100}
+    aria-valuenow={Math.round(progress * 100)}
+  >
+    <div className="device" aria-hidden="true">
+      <div className="screen">
+        <span className="cutout" />
+        <div className="screen-ui">
+          <span className="mascot" />
+          <Wave />
+        </div>
+      </div>
+      <span className="deck" />
+      <span className="neck" />
+      <span className="foot" />
+    </div>
+    <p className="boot-cap" aria-hidden="true">
+      <b>Akshay Mondal</b>
+      <span>
+        <span key={stage} className="boot-stage">{stageLabel[stage] ?? 'Web'}</span>
+        {' '}{Math.round(progress * 100)}%
+      </span>
+    </p>
+    <span className="boot-bar" aria-hidden="true"><i style={{ '--p': progress } as React.CSSProperties} /></span>
+  </div>
+);
+
+const Header: React.FC<{ onBooted: () => void }> = ({ onBooted }) => {
+  const [skipBoot] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches || !!window.location.hash || seenThisSession(),
+  );
+  const [phase, setPhase] = useState<Phase>(skipBoot ? 'docked' : 'hidden');
+  const [stage, setStage] = useState<Stage>(skipBoot ? 'gone' : 'phone');
+  const [progress, setProgress] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState('hero');
+  const notchRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      root.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
+    if (skipBoot) {
+      onBooted();
+      const target = window.location.hash && document.getElementById(window.location.hash.slice(1));
+      if (target) requestAnimationFrame(() => target.scrollIntoView());
+      return;
     }
-  }, [theme]);
+    if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+    window.scrollTo(0, 0);
+    const root = document.documentElement;
+    root.classList.add('booting');
+    let cancelled = false;
+    const timers: number[] = [];
+    const at = (ms: number, fn: () => void) => timers.push(window.setTimeout(fn, ms));
+    at(780, () => setStage('laptop'));
+    at(1560, () => setStage('desktop'));
 
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  useEffect(() => {
-    const observers = navLinks.map((link) => {
-      const element = document.getElementById(link.id);
-      if (!element) return null;
-
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveSection(link.id);
-          }
-        },
-        { rootMargin: '-30% 0px -60% 0px' }
-      );
-
-      observer.observe(element);
-      return { observer, element };
+    const fontsReady = document.fonts ? document.fonts.ready.then(() => undefined, () => undefined) : Promise.resolve();
+    const tasks = [fontsReady, ...bootAssets.map(loadImage)];
+    let done = 0;
+    tasks.forEach((t) =>
+      t.then(() => {
+        if (cancelled) return;
+        const value = ++done / tasks.length;
+        setProgress((p) => Math.max(p, value));
+      }),
+    );
+    const ready = Promise.all([Promise.all(tasks), new Promise((r) => setTimeout(r, 2300))]);
+    Promise.race([ready, new Promise((r) => setTimeout(r, 4000))]).then(() => {
+      if (cancelled) return;
+      setProgress(1);
+      at(180, () => {
+        try {
+          sessionStorage.setItem(SEEN_KEY, '1');
+        } catch {
+          // private mode: the loader simply plays again next visit
+        }
+        setStage('enter');
+        at(380, () => setPhase('docked'));
+        at(620, () => {
+          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+          root.classList.remove('booting');
+          onBooted();
+        });
+        at(1000, () => setStage('gone'));
+      });
     });
-
     return () => {
-      observers.forEach((obs) => {
-        if (obs) obs.observer.unobserve(obs.element);
-      });
+      cancelled = true;
+      timers.forEach(clearTimeout);
+      root.classList.remove('booting');
     };
   }, []);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
-    e.preventDefault();
-    setIsMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+  useEffect(() => {
+    const ids = Object.keys(sectionLabels);
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((e) => e.isIntersecting && setActive(e.target.id)),
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      setOpen(false);
+      notchRef.current?.querySelector<HTMLButtonElement>('.notch-toggle')?.focus();
+    };
+    const onDown = (e: PointerEvent) => {
+      if (notchRef.current && !notchRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onDown);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onDown);
+    };
+  }, [open]);
+
+  const [hoverable] = useState(() => window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+  const label = sectionLabels[active] ?? 'Akshay Mondal';
 
   return (
+    <>
+    {stage !== 'gone' && <Boot stage={stage} progress={progress} />}
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-[background-color,border-color,box-shadow,padding,backdrop-filter] duration-300 ${
-        isScrolled || isMenuOpen
-          ? 'bg-white/90 dark:bg-stone-950/80 backdrop-blur-lg border-b border-stone-200 dark:border-stone-900 shadow-sm py-4'
-          : 'bg-transparent py-6'
-      }`}
+      ref={notchRef}
+      className="notch"
+      data-phase={phase}
+      data-open={open}
+      style={{ '--notch-w': open ? '600px' : '292px' } as React.CSSProperties}
+      onMouseEnter={hoverable ? () => setOpen(true) : undefined}
+      onMouseLeave={hoverable ? () => setOpen(false) : undefined}
+      onFocus={(e) => e.target.matches(':focus-visible') && setOpen(true)}
+      onBlur={(e) => !e.currentTarget.contains(e.relatedTarget as Node) && setOpen(false)}
     >
-      <nav className="max-w-6xl mx-auto px-6 md:px-8 flex justify-between items-center">
-        <a
-          href="#top"
-          onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-          className="text-xl font-extrabold text-stone-900 dark:text-stone-100 hover:text-orange-600 dark:hover:text-orange-500 transition-colors tracking-tight"
-        >
-          AM<span className="text-orange-600 dark:text-orange-500">.</span>
+      <div className="notch-bar" inert={phase !== 'docked'}>
+        <a href="#hero" className="notch-home" aria-label={`${label}, back to top`}>
+          <span className="mascot" aria-hidden="true" />
+          <span className="notch-label">
+            <span key={active}>{label}</span>
+          </span>
         </a>
+        <Wave />
+        <button
+          type="button"
+          className="notch-toggle"
+          aria-expanded={open}
+          aria-controls="notch-links"
+          aria-label={open ? 'Close menu' : 'Open menu'}
+          onClick={() => setOpen((o) => !o)}
+        >
+          <Icons.Down size={16} />
+        </button>
+      </div>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8 text-sm font-medium">
-          {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={`#${link.id}`}
-              onClick={(e) => handleNavClick(e, link.id)}
-              className={`transition-colors duration-200 relative pb-1 ${
-                activeSection === link.id
-                  ? 'text-orange-600 dark:text-orange-400'
-                  : 'text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100'
-              }`}
-            >
-              {link.name}
-              {activeSection === link.id && (
-                <span className="absolute bottom-0 left-0 right-0 h-[2px] bg-orange-500 dark:bg-orange-400 rounded-full"></span>
-              )}
-            </a>
-          ))}
-
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg border border-stone-200 dark:border-stone-850 text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:border-stone-300 dark:hover:border-stone-700 bg-stone-50 dark:bg-stone-900/40 hover:bg-stone-100 dark:hover:bg-stone-900 transition-[color,background-color,border-color,transform,box-shadow] duration-200 cursor-pointer flex items-center justify-center w-9 h-9 shadow-sm hover:shadow active:scale-95"
-            aria-label="Toggle dark mode"
-          >
-            {theme === 'dark' ? (
-              <Icons.Sun size={18} className="text-orange-500 transition-transform duration-300 hover:rotate-45" />
-            ) : (
-              <Icons.Moon size={18} className="text-stone-600 transition-transform duration-300 hover:-rotate-12" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile menu and theme toggle */}
-        <div className="md:hidden flex items-center gap-3">
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-lg border border-stone-200 dark:border-stone-850 text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-100 hover:border-stone-300 dark:hover:border-stone-700 bg-stone-50 dark:bg-stone-900/40 hover:bg-stone-100 dark:hover:bg-stone-900 transition-[color,background-color,border-color,transform,box-shadow] duration-200 cursor-pointer flex items-center justify-center w-9 h-9 shadow-sm hover:shadow active:scale-95"
-            aria-label="Toggle dark mode"
-          >
-            {theme === 'dark' ? (
-              <Icons.Sun size={16} className="text-orange-500 transition-transform duration-300 hover:rotate-45" />
-            ) : (
-              <Icons.Moon size={16} className="text-stone-600 transition-transform duration-300 hover:-rotate-12" />
-            )}
-          </button>
-
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-stone-700 dark:text-stone-300 p-1.5 focus:outline-none"
-            aria-label="Toggle menu"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              {isMenuOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              )}
-            </svg>
-          </button>
-        </div>
-      </nav>
-
-      {/* Mobile Drawer */}
-      <div
-        className={`md:hidden fixed top-0 right-0 h-screen w-3/4 max-w-sm bg-white dark:bg-stone-900 border-l border-stone-200 dark:border-stone-850 shadow-xl transition-transform duration-300 ease-in-out transform ${
-          isMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        } flex flex-col items-center justify-center space-y-8 text-base font-medium`}
-      >
-        {navLinks.map((link) => (
-          <a
-            key={link.name}
-            href={`#${link.id}`}
-            className={`transition-colors ${
-              activeSection === link.id ? 'text-orange-600 dark:text-orange-400' : 'text-stone-700 dark:text-stone-300 hover:text-stone-900 dark:hover:text-stone-100'
-            }`}
-            onClick={(e) => handleNavClick(e, link.id)}
-          >
-            {link.name}
+      <nav id="notch-links" className="notch-links" aria-label="Primary" inert={phase !== 'docked' || !open}>
+        {navLinks.map((l) => (
+          <a key={l.id} href={`#${l.id}`} aria-current={active === l.id ? 'true' : undefined} onClick={() => setOpen(false)}>
+            {l.name}
           </a>
         ))}
-      </div>
+        <a className="notch-mail" href={`mailto:${EMAIL}`} onClick={() => setOpen(false)}>
+          Email me
+        </a>
+      </nav>
     </header>
+    </>
   );
 };
 

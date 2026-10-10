@@ -22,3 +22,7 @@ dist-ssr
 *.sln
 *.sw?
 public/ira-ai/demo_original.mp4
+
+# Local tools
+.claude
+.impeccable

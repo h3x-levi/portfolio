@@ -1,83 +1,127 @@
 import React from 'react';
-import AnimatedSection from './AnimatedSection';
+import Reveal from './AnimatedSection';
 
-const skills = [
-  { category: 'Cloud & Infra', items: ['AWS (EC2, EKS, S3, Lambda)', 'Azure DevOps', 'GCP', 'Terraform', 'Kubernetes', 'Docker', 'Ansible', 'IaC'] },
-  { category: 'CI/CD & DevOps', items: ['Jenkins', 'GitLab CI', 'ArgoCD', 'Prometheus & Grafana', 'Pipeline Automation'] },
-  { category: 'Testing & QA', items: ['Selenium WebDriver', 'Cypress', 'Test Automation', 'Regression Testing', 'Performance Testing', 'Agile/Scrum', 'Jira', 'Testrail'] },
-  { category: 'Scripting & Dev', items: ['Python', 'Java', 'JavaScript', 'Bash', 'React', 'TypeScript'] },
+const languages = [
+  { name: 'Python', where: "Signal's pipeline, IRA AI, test automation" },
+  { name: 'TypeScript', where: 'AWS CDK infrastructure, StepWise backend, dashboards' },
+  { name: 'Swift', where: 'Olivia and Utter, native macOS' },
+  { name: 'JavaScript', where: 'The StepWise extension, web dashboards' },
+  { name: 'Kotlin and Smithy', where: 'Service APIs and models' },
+  { name: 'Java and Dart', where: 'Selenium suites, Bharat Wallet in Flutter' },
 ];
 
-const About: React.FC = () => {
-  return (
-    <AnimatedSection id="about" className="py-20 md:py-28 bg-stone-100/50 dark:bg-stone-900/30">
-      <div className="max-w-6xl mx-auto px-6 md:px-8">
-        <h2 className="text-3xl font-extrabold text-stone-900 dark:text-stone-100 mb-10">
-          <span className="text-orange-600">01.</span> About Me
-        </h2>
+const skills = [
+  'AWS CDK', 'AWS Lambda', 'DynamoDB', 'Amazon S3', 'EventBridge', 'Amazon Bedrock', 'EKS', 'Terraform', 'Kubernetes', 'Docker', 'Ansible',
+  'SwiftUI', 'React', 'Node.js', 'Express', 'Flutter', 'PostgreSQL', 'Bash',
+  'Jenkins', 'GitLab CI', 'ArgoCD', 'Prometheus', 'Grafana', 'Selenium', 'Cypress', 'Vitest', 'Jest', 'TestRail', 'Jira',
+];
 
-        <div className="grid md:grid-cols-5 gap-12 items-start">
-          {/* Bio */}
-          <div className="md:col-span-3 space-y-5 text-stone-700 dark:text-stone-300 text-base md:text-lg leading-relaxed">
+const education = [
+  { title: 'BCA, Computer Science', school: 'Kazi Nazrul University, Asansol', period: '2016 to 2019', score: '7.8 GPA' },
+  { title: 'Higher Secondary, Pure Science', school: 'Bidhan Chandra College', period: '2014 to 2016', score: '82%' },
+];
+
+const capabilities = [
+  {
+    verb: 'Design',
+    text: "Interfaces and the pages around them: Olivia's notch UI and voice states, Signal's dashboard, and the product pages for both.",
+    proof: [
+      { src: '/work/design/olivia-page.jpg', alt: 'Product page I designed for Olivia', open: 'olivia' },
+      { src: '/work/design/signal-page.jpg', alt: 'Product page I designed for Signal', open: 'signal' },
+    ],
+  },
+  {
+    verb: 'Build',
+    text: 'Native macOS apps in Swift, serverless pipelines on AWS, Chrome extensions and Flutter apps, shipped end to end on my own.',
+    proof: [
+      { src: '/work/olivia/scr-home.webp', alt: 'Olivia following a coding agent', open: 'olivia' },
+      { src: '/work/stepwise/editor.jpg', alt: 'The StepWise document editor', open: 'stepwise' },
+    ],
+  },
+  {
+    verb: 'Run',
+    text: 'On-call, incidents and release days for a cloud gaming service. The problems I meet there become the next tool.',
+    chips: ['On-call', 'Release days', 'Alarm triage', 'Player issue investigation', 'Game certification'],
+  },
+];
+
+export const Capabilities: React.FC<{ onOpen: (id: string) => void }> = ({ onOpen }) => (
+  <section id="what" className="section caps-section" aria-labelledby="what-title">
+    <div className="wrap">
+      <Reveal>
+        <h2 id="what-title" className="h2">What I <em>do</em></h2>
+      </Reveal>
+      <div className="caps">
+        {capabilities.map((c) => (
+          <Reveal key={c.verb} className="cap">
+            <h3 className="cap-verb">{c.verb}</h3>
+            <p className="cap-text">{c.text}</p>
+            <div className="cap-proof">
+              {c.proof?.map((p) => (
+                <button key={p.src} type="button" className="island cap-shot" onClick={() => onOpen(p.open)} aria-label={`${p.alt}. Open the project`}>
+                  <img src={p.src} alt="" loading="lazy" />
+                </button>
+              ))}
+              {c.chips?.map((t) => <span key={t} className="chip cap-chip">{t}</span>)}
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+
+const About: React.FC = () => (
+  <section id="about" className="section">
+    <div className="wrap">
+      <div className="about">
+        <Reveal>
+          <div className="island portrait">
+            <img src="/profile.jpg" alt="Akshay Mondal" loading="lazy" />
+            <span className="portrait-notch" aria-hidden="true"><span className="live-dot" /></span>
+          </div>
+        </Reveal>
+        <Reveal>
+          <h2 className="h2">About <em>me</em></h2>
+          <div className="bio" style={{ marginTop: '2rem' }}>
             <p>
-              I am a Support Engineer and TechOps Specialist at Amazon Luna TechOps with over 5 years of experience spanning automated QA frameworks, system operations, and incident response.
+              I'm Akshay. By day I help keep Amazon Luna, Amazon's cloud gaming service, running: incidents, release days and the alarms in between.
             </p>
             <p>
-              Beyond my professional career, I actively build personal projects — like <strong className="text-stone-900 dark:text-stone-100 font-semibold">IRA AI</strong>, a local offline assistant for contextual learning, and <strong className="text-stone-900 dark:text-stone-100 font-semibold">Bharat Wallet</strong>, an experimental Indian digital wallet integrating UPI mock-ups and secure biometric authentication.
+              Most of what I build starts with a problem I ran into at work. Olivia came from switching between too many apps. Signal came from players reporting problems in public before anyone filed a ticket.
             </p>
             <p>
-              My toolkit includes QuickSight, SIM, Jira LabCollab, Coral Explorer, and Agile/Scrum practices for structured execution across complex systems. Whether it's managing massive game releases, triaging automated alarms, or writing automation scripts, I'm at my best solving intricate operational puzzles.
+              Before Amazon I worked in customer support, recruiting and real estate. I live in Bengaluru, India.
             </p>
           </div>
-
-          {/* Education */}
-          <div className="md:col-span-2 space-y-6">
-            <h3 className="text-sm font-bold text-stone-900 dark:text-stone-200 uppercase tracking-wider">Education</h3>
-            
-            <div className="bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 shadow-sm">
-              <h4 className="text-stone-900 dark:text-stone-100 font-bold text-base">BCA, Computer Science</h4>
-              <p className="text-stone-500 dark:text-stone-400 text-sm mt-1">Kazi Nazrul University, Asansol</p>
-              <p className="text-stone-400 dark:text-stone-500 text-xs font-mono mt-1">2016 – 2019</p>
-              <span className="inline-block mt-2 bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50 rounded font-mono text-xs px-2 py-0.5 font-semibold">
-                7.8 GPA
-              </span>
-            </div>
-
-            <div className="bg-white dark:bg-stone-900/60 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 shadow-sm">
-              <h4 className="text-stone-900 dark:text-stone-100 font-bold text-base">Pure Science (HS)</h4>
-              <p className="text-stone-500 dark:text-stone-400 text-sm mt-1">Bidhan Chandra College</p>
-              <p className="text-stone-400 dark:text-stone-500 text-xs font-mono mt-1">2014 – 2016</p>
-              <span className="inline-block mt-2 bg-orange-50 dark:bg-orange-950/20 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-900/50 rounded font-mono text-xs px-2 py-0.5 font-semibold">
-                82%
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Skills */}
-        <div className="mt-16">
-          <h3 className="text-sm font-bold text-stone-900 dark:text-stone-200 uppercase tracking-wider mb-6">Core Skills</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {skills.map((group) => (
-              <div key={group.category}>
-                <h4 className="text-stone-500 dark:text-stone-400 text-xs font-semibold uppercase tracking-wider mb-3">{group.category}</h4>
-                <div className="flex flex-wrap gap-2">
-                  {group.items.map((skill) => (
-                    <span
-                      key={skill}
-                      className="bg-white dark:bg-stone-900/40 border border-stone-200 dark:border-stone-800 text-stone-700 dark:text-stone-300 text-xs px-3 py-1.5 rounded-lg hover:border-orange-300 dark:hover:border-orange-500 hover:text-orange-700 dark:hover:text-orange-300 transition-[border-color,color] duration-200 cursor-default"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
+          <div className="edu">
+            {education.map((e) => (
+              <div key={e.title} className="island edu-item">
+                <h3>{e.title}</h3>
+                <p>{e.school}</p>
+                <span className="mono">{e.period} · {e.score}</span>
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
       </div>
-    </AnimatedSection>
-  );
-};
+
+      <Reveal className="langs">
+        <h3 className="group-title">Languages I write</h3>
+        <ul className="lang-list">
+          {languages.map((l) => (
+            <li key={l.name} className="lang">
+              <b>{l.name}</b>
+              <span>{l.where}</span>
+            </li>
+          ))}
+        </ul>
+        <ul className="tools" aria-label="Tools and platforms">
+          {skills.map((s) => <li key={s}>{s}</li>)}
+        </ul>
+      </Reveal>
+    </div>
+  </section>
+);
 
 export default About;
